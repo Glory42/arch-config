@@ -1,0 +1,72 @@
+# Prompt for bash in the terminal's own ANSI colours, so it follows the theme; needs a Nerd Font (https://starship.rs/config/)
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = true
+command_timeout = 500
+
+# One line: [ cat user@host ][ folder ]>>>[ time ], then the pills that only show when needed
+format = """\
+$os$username$hostname$directory$time\
+$git_branch$git_status$status$nodejs$python$golang$bun$docker_context$cmd_duration"""
+
+[os]
+disabled = false
+format = "[](fg:blue)[$symbol ](fg:black bg:blue)"
+[os.symbols]
+Arch = "󰄛"
+Linux = "\uf17c"
+
+[username]
+show_always = true
+format = "[$user](fg:black bg:blue)"
+
+[hostname]
+ssh_only = false
+format = "[@$hostname ](fg:black bg:blue)[](fg:blue bg:white)"
+
+# the folder, then three chevrons (red, green, blue) leading into the time
+[directory]
+format = "[ $path$read_only ](fg:black bg:white)[](fg:white bg:red)[](fg:red bg:green)[](fg:green bg:blue)[](fg:blue bg:bright-black)"
+read_only = " \uf023"
+truncation_length = 3
+truncation_symbol = "…/"
+home_symbol = "~"
+
+[time]
+disabled = false
+time_format = "%H:%M"
+format = "[  $time ](fg:white bg:bright-black)[](fg:bright-black) "
+
+[git_branch]
+symbol = " "
+format = "[](fg:purple)[ $symbol$branch ](fg:black bg:purple)[](fg:purple) "
+
+[git_status]
+format = "([](fg:red)[ $all_status$ahead_behind ](fg:black bg:red)[](fg:red) )"
+
+# a red pill with the exit code after a command that failed (also after Ctrl+C)
+[status]
+disabled = false
+symbol = "✘ "
+format = "([](fg:red)[ $symbol$status ](fg:black bg:red)[](fg:red) )"
+
+[nodejs]
+symbol = "\ued0d"
+format = "[](fg:yellow)[ $symbol$version ](fg:black bg:yellow)[](fg:yellow) "
+[python]
+symbol = "\ue73c"
+format = "[](fg:yellow)[ $symbol ${{pyenv_prefix}}${{version}} ](fg:black bg:yellow)[](fg:yellow) "
+[golang]
+symbol = "\ue627"
+format = "[](fg:cyan)[ $symbol$version ](fg:black bg:cyan)[](fg:cyan) "
+[bun]
+symbol = "\ue76f"
+format = "[](fg:yellow)[ $symbol$version ](fg:black bg:yellow)[](fg:yellow) "
+[docker_context]
+symbol = "\uf308"
+format = "[](fg:blue)[ $symbol $context ](fg:black bg:blue)[](fg:blue) "
+only_with_files = true
+
+[cmd_duration]
+min_time = 2000
+format = "[](fg:bright-black)[ \uf252 $duration ](fg:white bg:bright-black)[](fg:bright-black) "

@@ -1,0 +1,102 @@
+#!/usr/bin/env python3
+"""Makes the Apollo-Icons theme: the folder icons of Papirus-Dark in the accent colour of the current theme (run by apply-theme)."""
+import configparser
+import json
+import os
+import re
+import sys
+from pathlib import Path
+
+home = Path.home()
+config = home / ".config" / "theme"
+palette = json.loads((config / "palette.json").read_text())
+appearance = json.loads((config / "appearance.json").read_text())
+
+base_name = appearance["icon_base"]
+name = appearance["icon_theme"]
+out_root = Path(os.environ.get("APOLLO_ICON_OUT", home / ".local/share/icons"))
+search = os.environ.get("APOLLO_ICON_SEARCH", f"/usr/share/icons:{home}/.local/share/icons").split(":")
+
+base = next((Path(d) / base_name for d in search if (Path(d) / base_name / "index.theme").is_file()), None)
+if base is None:
+    sys.exit(f"recolor-icons: icon theme {base_name} not found in {search}")
+
+
+def mix(a, b, part):
+    """a with `part` (0..1) of b mixed in; colours are hex without #"""
+    return "".join(
+        "%02x" % round(int(a[i:i + 2], 16) * (1 - part) + int(b[i:i + 2], 16) * part) for i in (0, 2, 4)
+    )
+
+
+# The folder icons a file manager asks for by name: plain folders, the home folder, the special folders
+WANTED = {
+    "folder", "folder-open", "inode-directory", "user-home", "user-desktop", "folder-desktop",
+    "folder-documents", "folder-documents-open", "folder-download", "folder-download-open",
+    "folder-downloads", "folder-music", "folder-music-open", "folder-pictures", "folder-pictures-open",
+    "folder-videos", "folder-videos-open", "folder-video", "folder-publicshare", "folder-public",
+    "folder-templates", "folder-recent", "folder-remote", "folder-network", "folder-saved-search",
+    "folder-drag-accept", "folder-favorites", "folder-important", "folder-locked", "folder-development",
+    "folder-code", "folder-cloud", "folder-temp", "folder-backup", "folder-games", "folder-books",
+}
+
+accent = palette["accent"][:6].lower()
+# Papirus' blue folder: main, darker back, dark emblem
+colors = {
+    "5294e2": accent,
+    "4877b1": mix(accent, "000000", 0.22),
+    "1d344f": mix(accent, "000000", 0.68),
+}
+pattern = re.compile("|".join("#" + c for c in colors), re.I)
+
+
+def recolor(text):
+    return pattern.sub(lambda m: "#" + colors[m.group(0)[1:].lower()], text)
+
+
+# the directories of the base theme that hold folder icons, as written in its index.theme
+index = configparser.RawConfigParser(strict=False)
+index.optionxform = str
+index.read(base / "index.theme")
+sections = [s for s in index.sections() if re.fullmatch(r"\d+x\d+(@2x)?/places", s)]
+
+out = out_root / name
+changed = 0
+for section in sections:
+    src, dst = base / section, out / section
+    if not src.is_dir():
+        continue
+    dst.mkdir(parents=True, exist_ok=True)
+    for wanted in sorted(WANTED):
+        entry = src / (wanted + ".svg")
+        if not entry.exists():
+            continue
+        real = Path(os.path.realpath(entry)).name
+        if not real.startswith(("folder-blue", "user-blue")):
+            continue
+        text = recolor(Path(os.path.realpath(entry)).read_text())
+        target = dst / entry.name
+        if target.is_symlink():
+            target.unlink()
+        if not target.exists() or target.read_text() != text:
+            target.write_text(text)
+            changed += 1
+
+# index.theme: inherit from the base, list only the directories that were filled
+lines = ["[Icon Theme]", f"Name={name}", f"Comment=Folders of {base_name} in the accent colour (made by bin/recolor-icons)",
+         f"Inherits={base_name}", "Directories=" + ",".join(s for s in sections if (out / s).is_dir()), ""]
+for s in sections:
+    if (out / s).is_dir():
+        lines.append(f"[{s}]")
+        lines += [f"{k}={v}" for k, v in index[s].items()]
+        lines.append("")
+text = "\n".join(lines)
+index_file = out / "index.theme"
+if not index_file.exists() or index_file.read_text() != text:
+    index_file.write_text(text)
+    changed += 1
+
+# Running apps look at the folder's modification time to notice a changed icon theme
+if changed:
+    os.utime(out)
+print(f"recolor-icons: {name} in #{accent}, {changed} files written")

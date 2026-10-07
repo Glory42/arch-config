@@ -1,0 +1,22 @@
+#!/bin/bash
+
+device=""
+for candidate in /sys/class/leds/*kbd_backlight*; do
+    [[ -e $candidate ]] && { device=$(basename "$candidate"); break; }
+done
+[[ -n $device ]] || { echo "No keyboard backlight found" >&2; exit 1; }
+
+max=$(brightnessctl -d "$device" max)
+current=$(brightnessctl -d "$device" get)
+step=$(( max / 10 )); (( step < 1 )) && step=1
+
+case "${1:-up}" in
+    up)    new=$(( current + step )); (( new > max )) && new=$max ;;
+    down)  new=$(( current - step )); (( new < 0 )) && new=0 ;;
+    cycle) if (( current >= max )); then new=0; else new=$(( current + step )); (( new > max )) && new=$max; fi ;;
+    off)   new=0 ;;
+    *)     echo "Usage: kbd-backlight up|down|cycle|off" >&2; exit 1 ;;
+esac
+
+brightnessctl -d "$device" set "$new" >/dev/null
+notify-send -a Hyprland "Keyboard backlight" "$new / $max" 2>/dev/null || true

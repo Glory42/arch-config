@@ -1,0 +1,684 @@
+#!/bin/bash
+set -e
+
+PALETTE=~/.config/theme/palette.json
+
+bg=$(jq -r '.bg' "$PALETTE" | cut -c1-6)
+fg=$(jq -r '.fg' "$PALETTE" | cut -c1-6)
+accent=$(jq -r '.accent' "$PALETTE" | cut -c1-6)
+border_active=$(jq -r '.border_active' "$PALETTE" | cut -c1-6)
+border_inactive=$(jq -r '.border_inactive' "$PALETTE" | cut -c1-6)
+regular0=$(jq -r '.regular0' "$PALETTE" | cut -c1-6)
+regular1=$(jq -r '.regular1' "$PALETTE" | cut -c1-6)
+regular2=$(jq -r '.regular2' "$PALETTE" | cut -c1-6)
+regular3=$(jq -r '.regular3' "$PALETTE" | cut -c1-6)
+regular4=$(jq -r '.regular4' "$PALETTE" | cut -c1-6)
+regular5=$(jq -r '.regular5' "$PALETTE" | cut -c1-6)
+regular6=$(jq -r '.regular6' "$PALETTE" | cut -c1-6)
+regular7=$(jq -r '.regular7' "$PALETTE" | cut -c1-6)
+bright0=$(jq -r '.bright0' "$PALETTE" | cut -c1-6)
+bright1=$(jq -r '.bright1' "$PALETTE" | cut -c1-6)
+bright2=$(jq -r '.bright2' "$PALETTE" | cut -c1-6)
+bright3=$(jq -r '.bright3' "$PALETTE" | cut -c1-6)
+bright4=$(jq -r '.bright4' "$PALETTE" | cut -c1-6)
+bright5=$(jq -r '.bright5' "$PALETTE" | cut -c1-6)
+bright6=$(jq -r '.bright6' "$PALETTE" | cut -c1-6)
+bright7=$(jq -r '.bright7' "$PALETTE" | cut -c1-6)
+comment=$(jq -r '.comment // .bright0' "$PALETTE" | cut -c1-6)
+muted=$(jq -r '.muted // .bright0' "$PALETTE" | cut -c1-6)
+
+cat > ~/.config/foot/theme.ini <<EOF
+[colors-dark]
+background=$bg
+foreground=$fg
+regular0=$regular0
+regular1=$regular1
+regular2=$regular2
+regular3=$regular3
+regular4=$regular4
+regular5=$regular5
+regular6=$regular6
+regular7=$regular7
+bright0=$bright0
+bright1=$bright1
+bright2=$bright2
+bright3=$bright3
+bright4=$bright4
+bright5=$bright5
+bright6=$bright6
+bright7=$bright7
+EOF
+
+cat > ~/.config/zed/themes/hyprland-dots.json <<EOF
+{
+  "\$schema": "https://zed.dev/schema/themes/v0.2.0.json",
+  "name": "Hyprland Dots",
+  "author": "Görkem",
+  "themes": [
+    {
+      "name": "Hyprland Dots",
+      "appearance": "dark",
+      "style": {
+        "border": "#$border_inactive",
+        "border.variant": "#$muted",
+        "border.focused": "#$accent",
+        "border.selected": "#${accent}99",
+        "border.transparent": "#00000000",
+        "border.disabled": "#$muted",
+        "elevated_surface.background": "#$muted",
+        "surface.background": "#$muted",
+        "background": "#$bg",
+        "element.background": "#$muted",
+        "element.hover": "#$border_inactive",
+        "element.active": "#$accent",
+        "element.selected": "#${accent}66",
+        "element.disabled": "#$muted",
+        "drop_target.background": "#${accent}80",
+        "ghost_element.background": "#00000000",
+        "ghost_element.hover": "#$border_inactive",
+        "ghost_element.active": "#$accent",
+        "ghost_element.selected": "#${accent}66",
+        "ghost_element.disabled": "#$muted",
+        "text": "#$fg",
+        "text.muted": "#$muted",
+        "text.placeholder": "#$muted",
+        "text.disabled": "#$muted",
+        "text.accent": "#$accent",
+        "icon": "#$fg",
+        "icon.muted": "#$muted",
+        "icon.disabled": "#$muted",
+        "icon.placeholder": "#$muted",
+        "icon.accent": "#$accent",
+        "status_bar.background": "#$bg",
+        "title_bar.background": "#$bg",
+        "title_bar.inactive_background": "#$muted",
+        "toolbar.background": "#$bg",
+        "tab_bar.background": "#$muted",
+        "tab.inactive_background": "#$muted",
+        "tab.active_background": "#$bg",
+        "tab.inactive_foreground": "#$muted",
+        "tab.active_foreground": "#$accent",
+        "search.match_background": "#${accent}66",
+        "search.active_match_background": "#${regular3}66",
+        "panel.background": "#$muted",
+        "panel.focused_border": "#$accent",
+        "pane.focused_border": "#$accent",
+        "scrollbar.thumb.background": "#${accent}4c",
+        "scrollbar.thumb.hover_background": "#$accent",
+        "scrollbar.thumb.border": "#$accent",
+        "scrollbar.track.background": "#00000000",
+        "scrollbar.track.border": "#$muted",
+        "editor.foreground": "#$fg",
+        "editor.background": "#$bg",
+        "editor.gutter.background": "#$bg",
+        "editor.gutter_foreground": "#$muted",
+        "editor.subheader.background": "#$muted",
+        "editor.active_line.background": "#$muted",
+        "editor.highlighted_line.background": "#$muted",
+        "editor.line_number": "#$muted",
+        "editor.active_line_number": "#$accent",
+        "editor.hover_line_number": "#$fg",
+        "editor.invisible": "#$border_inactive",
+        "editor.wrap_guide": "#${accent}0d",
+        "editor.active_wrap_guide": "#${accent}1a",
+        "editor.document_highlight.read_background": "#${accent}1a",
+        "editor.document_highlight.write_background": "#${muted}66",
+        "terminal.background": "#$bg",
+        "terminal.foreground": "#$fg",
+        "terminal.bright_foreground": "#$bright7",
+        "terminal.dim_foreground": "#$muted",
+        "terminal.ansi.black": "#$regular0",
+        "terminal.ansi.bright_black": "#$bright0",
+        "terminal.ansi.dim_black": "#$muted",
+        "terminal.ansi.red": "#$regular1",
+        "terminal.ansi.bright_red": "#$bright1",
+        "terminal.ansi.dim_red": "#$regular1",
+        "terminal.ansi.green": "#$regular2",
+        "terminal.ansi.bright_green": "#$bright2",
+        "terminal.ansi.dim_green": "#$regular2",
+        "terminal.ansi.yellow": "#$regular3",
+        "terminal.ansi.bright_yellow": "#$bright3",
+        "terminal.ansi.dim_yellow": "#$regular3",
+        "terminal.ansi.blue": "#$regular4",
+        "terminal.ansi.bright_blue": "#$bright4",
+        "terminal.ansi.dim_blue": "#$regular4",
+        "terminal.ansi.magenta": "#$regular5",
+        "terminal.ansi.bright_magenta": "#$bright5",
+        "terminal.ansi.dim_magenta": "#$regular5",
+        "terminal.ansi.cyan": "#$regular6",
+        "terminal.ansi.bright_cyan": "#$bright6",
+        "terminal.ansi.dim_cyan": "#$regular6",
+        "terminal.ansi.white": "#$regular7",
+        "terminal.ansi.bright_white": "#$bright7",
+        "terminal.ansi.dim_white": "#$regular7",
+        "link_text.hover": "#$accent",
+        "version_control.added": "#$regular2",
+        "version_control.modified": "#$regular3",
+        "version_control.word_added": "#${regular2}59",
+        "version_control.word_deleted": "#${regular1}CC",
+        "version_control.deleted": "#$regular1",
+        "version_control.conflict_marker.ours": "#${regular2}1a",
+        "version_control.conflict_marker.theirs": "#${accent}1a",
+        "conflict": "#$regular3",
+        "conflict.background": "#${regular3}1a",
+        "conflict.border": "#$regular3",
+        "created": "#$regular2",
+        "created.background": "#${regular2}1a",
+        "created.border": "#$regular2",
+        "deleted": "#$regular1",
+        "deleted.background": "#${regular1}1a",
+        "deleted.border": "#$regular1",
+        "error": "#$regular1",
+        "error.background": "#${regular1}1a",
+        "error.border": "#$regular1",
+        "hidden": "#$muted",
+        "hidden.background": "#${muted}1a",
+        "hidden.border": "#$muted",
+        "hint": "#$regular6",
+        "hint.background": "#${regular6}1a",
+        "hint.border": "#$regular6",
+        "ignored": "#$muted",
+        "ignored.background": "#${muted}1a",
+        "ignored.border": "#$border_inactive",
+        "info": "#$accent",
+        "info.background": "#${accent}1a",
+        "info.border": "#$accent",
+        "modified": "#$regular3",
+        "modified.background": "#${regular3}1a",
+        "modified.border": "#$regular3",
+        "predictive": "#$bright6",
+        "predictive.background": "#${bright6}1a",
+        "predictive.border": "#$bright6",
+        "renamed": "#$accent",
+        "renamed.background": "#${accent}1a",
+        "renamed.border": "#$accent",
+        "success": "#$regular2",
+        "success.background": "#${regular2}1a",
+        "success.border": "#$regular2",
+        "unreachable": "#$muted",
+        "unreachable.background": "#${muted}1a",
+        "unreachable.border": "#$border_inactive",
+        "warning": "#$regular3",
+        "warning.background": "#${regular3}1a",
+        "warning.border": "#$regular3",
+        "players": [
+          { "cursor": "#$accent", "background": "#$accent", "selection": "#${accent}3d" },
+          { "cursor": "#$bright1", "background": "#$bright1", "selection": "#${bright1}3d" },
+          { "cursor": "#$regular3", "background": "#$regular3", "selection": "#${regular3}3d" },
+          { "cursor": "#$regular5", "background": "#$regular5", "selection": "#${regular5}3d" },
+          { "cursor": "#$regular6", "background": "#$regular6", "selection": "#${regular6}3d" },
+          { "cursor": "#$regular1", "background": "#$regular1", "selection": "#${regular1}3d" },
+          { "cursor": "#$regular3", "background": "#$regular3", "selection": "#${regular3}3d" },
+          { "cursor": "#$regular2", "background": "#$regular2", "selection": "#${regular2}3d" }
+        ],
+        "syntax": {
+          "attribute": { "color": "#$regular6", "font_style": null, "font_weight": null },
+          "boolean": { "color": "#$regular3", "font_style": null, "font_weight": null },
+          "comment": { "color": "#$comment", "font_style": "italic", "font_weight": null },
+          "comment.doc": { "color": "#$comment", "font_style": "italic", "font_weight": null },
+          "constant": { "color": "#$regular3", "font_style": null, "font_weight": null },
+          "constructor": { "color": "#$accent", "font_style": null, "font_weight": null },
+          "embedded": { "color": "#$fg", "font_style": null, "font_weight": null },
+          "emphasis": { "color": "#$accent", "font_style": "italic", "font_weight": null },
+          "emphasis.strong": { "color": "#$regular3", "font_style": null, "font_weight": 700 },
+          "enum": { "color": "#$regular6", "font_style": null, "font_weight": null },
+          "function": { "color": "#$regular2", "font_style": null, "font_weight": null },
+          "hint": { "color": "#$regular6", "font_style": null, "font_weight": null },
+          "keyword": { "color": "#$accent", "font_style": null, "font_weight": null },
+          "keyword.control": { "color": "#$accent", "font_style": null, "font_weight": null },
+          "keyword.operator": { "color": "#$regular6", "font_style": null, "font_weight": null },
+          "label": { "color": "#$accent", "font_style": null, "font_weight": null },
+          "link_text": { "color": "#$regular2", "font_style": "italic", "font_weight": null },
+          "link_uri": { "color": "#$regular6", "font_style": null, "font_weight": null },
+          "namespace": { "color": "#$fg", "font_style": null, "font_weight": null },
+          "number": { "color": "#$regular3", "font_style": null, "font_weight": null },
+          "operator": { "color": "#$regular6", "font_style": null, "font_weight": null },
+          "predictive": { "color": "#$bright6", "font_style": "italic", "font_weight": null },
+          "preproc": { "color": "#$accent", "font_style": null, "font_weight": null },
+          "primary": { "color": "#$fg", "font_style": null, "font_weight": null },
+          "property": { "color": "#$regular6", "font_style": null, "font_weight": null },
+          "punctuation": { "color": "#$fg", "font_style": null, "font_weight": null },
+          "punctuation.bracket": { "color": "#$muted", "font_style": null, "font_weight": null },
+          "punctuation.delimiter": { "color": "#$muted", "font_style": null, "font_weight": null },
+          "punctuation.list_marker": { "color": "#$regular6", "font_style": null, "font_weight": null },
+          "punctuation.markup": { "color": "#$regular6", "font_style": null, "font_weight": null },
+          "punctuation.special": { "color": "#$bright1", "font_style": null, "font_weight": null },
+          "selector": { "color": "#$regular2", "font_style": null, "font_weight": null },
+          "selector.pseudo": { "color": "#$accent", "font_style": null, "font_weight": null },
+          "string": { "color": "#$regular2", "font_style": null, "font_weight": null },
+          "string.escape": { "color": "#$bright6", "font_style": null, "font_weight": null },
+          "string.regex": { "color": "#$regular3", "font_style": null, "font_weight": null },
+          "string.special": { "color": "#$regular3", "font_style": null, "font_weight": null },
+          "string.special.symbol": { "color": "#$regular3", "font_style": null, "font_weight": null },
+          "tag": { "color": "#$accent", "font_style": null, "font_weight": null },
+          "text.literal": { "color": "#$regular2", "font_style": null, "font_weight": null },
+          "title": { "color": "#$regular1", "font_style": null, "font_weight": 400 },
+          "type": { "color": "#$regular4", "font_style": null, "font_weight": null },
+          "variable": { "color": "#$fg", "font_style": null, "font_weight": null },
+          "variable.parameter": { "color": "#$regular1", "font_style": null, "font_weight": null },
+          "variable.special": { "color": "#$regular3", "font_style": null, "font_weight": null },
+          "variant": { "color": "#$regular2", "font_style": null, "font_weight": null },
+          "diff.plus": { "color": "#$regular2", "font_style": null, "font_weight": null },
+          "diff.minus": { "color": "#$regular1", "font_style": null, "font_weight": null }
+        }
+      }
+    }
+  ]
+}
+EOF
+
+edge=$border_inactive
+mkdir -p ~/.config/gtk-3.0 ~/.config/gtk-4.0
+
+cat > ~/.config/gtk-4.0/colors.css <<EOF
+/* Generated by bin/apply-theme from palette.json, do not edit */
+@define-color window_bg_color #$bg;
+@define-color window_fg_color #$fg;
+@define-color view_bg_color #$bg;
+@define-color view_fg_color #$fg;
+@define-color headerbar_bg_color #$bg;
+@define-color headerbar_fg_color #$fg;
+@define-color headerbar_border_color #$edge;
+@define-color sidebar_bg_color #$bg;
+@define-color sidebar_fg_color #$fg;
+@define-color card_bg_color #$edge;
+@define-color card_fg_color #$fg;
+@define-color popover_bg_color #$edge;
+@define-color popover_fg_color #$fg;
+@define-color dialog_bg_color #$bg;
+@define-color dialog_fg_color #$fg;
+@define-color accent_bg_color #$accent;
+@define-color accent_color #$accent;
+EOF
+
+cat > ~/.config/gtk-3.0/colors.css <<EOF
+/* Generated by bin/apply-theme from palette.json, do not edit */
+@define-color theme_bg_color #$bg;
+@define-color theme_fg_color #$fg;
+@define-color theme_base_color #$bg;
+@define-color theme_text_color #$fg;
+@define-color theme_selected_bg_color #$accent;
+@define-color theme_selected_fg_color #$fg;
+@define-color borders #$edge;
+@define-color accent_bg_color #$accent;
+@define-color accent_fg_color #$fg;
+EOF
+
+(
+set +e
+mix() {
+    local a=$1 b=$2 p=$3 out="" i x y
+    for i in 0 2 4; do
+        x=$((16#${a:i:2})); y=$((16#${b:i:2}))
+        out+=$(printf '%02x' $(( (x * (100 - p) + y * p + 50) / 100 )))
+    done
+    echo "$out"
+}
+red=$regular1; green=$regular2; yellow=$regular3; blue=$regular4; magenta=$regular5; cyan=$regular6
+dark_bg=$(mix "$bg" 000000 30)
+lighter_bg=$(mix "$bg" "$fg" 8)
+selection=$(mix "$bg" "$accent" 25)
+edge=$(mix "$bg" "$fg" 18)
+dim=$(mix "$fg" "$bg" 45)
+dimmer=$(mix "$fg" "$bg" 70)
+
+if command -v cava >/dev/null 2>&1; then
+    mkdir -p ~/.config/cava/themes
+    {
+        echo "# Generated by bin/apply-theme from palette.json, do not edit"
+        echo "[color]"
+        echo "gradient = 1"
+        n=1
+        for p in 0 12 24 38 52 66 80 94; do
+            echo "gradient_color_$n = '#$(mix "$accent" "$fg" "$p")'"
+            n=$((n + 1))
+        done
+    } > ~/.config/cava/themes/apollo
+    pgrep -x cava | xargs -r kill -USR2
+fi
+
+if [ -d ~/.config/btop ]; then
+    mkdir -p ~/.config/btop/themes
+    cat > ~/.config/btop/themes/apollo.theme <<EOT
+# Generated by bin/apply-theme from palette.json, do not edit
+theme[main_bg]="#$bg"
+theme[main_fg]="#$fg"
+theme[title]="#$fg"
+theme[hi_fg]="#$accent"
+theme[selected_bg]="#$selection"
+theme[selected_fg]="#$accent"
+theme[inactive_fg]="#$dimmer"
+theme[graph_text]="#$bright7"
+theme[meter_bg]="#$selection"
+theme[proc_misc]="#$bright7"
+theme[cpu_box]="#$magenta"
+theme[mem_box]="#$green"
+theme[net_box]="#$red"
+theme[proc_box]="#$accent"
+theme[div_line]="#$edge"
+theme[temp_start]="#$green"
+theme[temp_mid]="#$yellow"
+theme[temp_end]="#$red"
+theme[cpu_start]="#$cyan"
+theme[cpu_mid]="#$blue"
+theme[cpu_end]="#$magenta"
+theme[free_start]="#$magenta"
+theme[free_mid]="#$blue"
+theme[free_end]="#$cyan"
+theme[cached_start]="#$blue"
+theme[cached_mid]="#$cyan"
+theme[cached_end]="#$magenta"
+theme[available_start]="#$yellow"
+theme[available_mid]="#$red"
+theme[available_end]="#$red"
+theme[used_start]="#$green"
+theme[used_mid]="#$cyan"
+theme[used_end]="#$blue"
+theme[download_start]="#$yellow"
+theme[download_mid]="#$red"
+theme[download_end]="#$red"
+theme[upload_start]="#$green"
+theme[upload_mid]="#$cyan"
+theme[upload_end]="#$blue"
+theme[process_start]="#$cyan"
+theme[process_mid]="#$blue"
+theme[process_end]="#$magenta"
+theme[gradient_color_0]="#$bg"
+theme[gradient_color_1]="#$lighter_bg"
+theme[gradient_color_2]="#$selection"
+theme[gradient_color_3]="#$edge"
+theme[gradient_color_4]="#$dim"
+theme[gradient_color_5]="#$fg"
+theme[gradient_color_6]="#$bright7"
+theme[gradient_color_7]="#$bright7"
+EOT
+    pkill -USR2 -x btop 2>/dev/null || true
+fi
+
+if [ -f ~/.config/herdr/config.toml ] && grep -q '^# apply-theme:begin' ~/.config/herdr/config.toml; then
+    block=$(cat <<EOT
+# apply-theme:begin (generated from palette.json, do not edit down to the end marker)
+[theme]
+name = "terminal"
+auto_switch = false
+
+[theme.custom]
+panel_bg = "#$bg"
+sidebar_bg = "#$dark_bg"
+surface_dim = "#$dark_bg"
+active_row_bg = "#$(mix "$dark_bg" "$accent" 18)"
+selection_bg = "#$selection"
+accent = "#$accent"
+red = "#$red"
+green = "#$green"
+yellow = "#$yellow"
+peach = "#$bright1"
+mauve = "#$magenta"
+# apply-theme:end
+EOT
+)
+    tmp=$(mktemp)
+    awk -v block="$block" '
+        /^# apply-theme:begin/ { print block; skip = 1; next }
+        /^# apply-theme:end/   { skip = 0; next }
+        !skip
+    ' ~/.config/herdr/config.toml > "$tmp" && cat "$tmp" > ~/.config/herdr/config.toml; rm -f "$tmp"
+    herdr server reload-config >/dev/null 2>&1 || true
+fi
+
+mkdir -p ~/.claude/themes
+cat > ~/.claude/themes/apollo.json <<EOT
+{
+  "name": "Apollo",
+  "base": "dark",
+  "overrides": {
+    "claude": "#$accent",
+    "claudeShimmer": "#$(mix "$accent" "$fg" 35)",
+    "text": "#$fg",
+    "inverseText": "#$bg",
+    "inactive": "#$(mix "$fg" "$bg" 40)",
+    "inactiveShimmer": "#$(mix "$fg" "$bg" 25)",
+    "subtle": "#$dim",
+    "suggestion": "#$cyan",
+    "permission": "#$blue",
+    "permissionShimmer": "#$(mix "$blue" "$fg" 35)",
+    "remember": "#$yellow",
+    "success": "#$green",
+    "error": "#$red",
+    "warning": "#$yellow",
+    "warningShimmer": "#$(mix "$yellow" "$fg" 35)",
+    "merged": "#$magenta",
+    "promptBorder": "#$accent",
+    "promptBorderShimmer": "#$(mix "$accent" "$fg" 35)",
+    "planMode": "#$cyan",
+    "autoAccept": "#$yellow",
+    "bashBorder": "#$bright3",
+    "ide": "#$bright6",
+    "diffAdded": "#$(mix "$bg" "$green" 15)",
+    "diffRemoved": "#$(mix "$bg" "$red" 15)",
+    "diffAddedDimmed": "#$(mix "$bg" "$green" 8)",
+    "diffRemovedDimmed": "#$(mix "$bg" "$red" 8)",
+    "diffAddedWord": "#$(mix "$bg" "$green" 32)",
+    "diffRemovedWord": "#$(mix "$bg" "$red" 32)",
+    "userMessageBackground": "#$(mix "$bg" "$fg" 6)",
+    "userMessageBackgroundHover": "#$(mix "$bg" "$fg" 10)",
+    "bashMessageBackgroundColor": "#$(mix "$bg" "$fg" 6)",
+    "memoryBackgroundColor": "#$(mix "$bg" "$fg" 6)",
+    "selectionBg": "#$selection",
+    "rate_limit_fill": "#$accent",
+    "rate_limit_empty": "#$(mix "$bg" "$fg" 20)",
+    "briefLabelYou": "#$yellow",
+    "briefLabelClaude": "#$accent"
+  }
+}
+EOT
+if [ ! -f ~/.claude/settings.json ]; then
+    echo '{ "theme": "custom:apollo" }' > ~/.claude/settings.json
+elif [ "$(jq -r '.theme // empty' ~/.claude/settings.json 2>/dev/null)" = "" ]; then
+    tmp=$(mktemp) && jq '.theme = "custom:apollo"' ~/.claude/settings.json > "$tmp" && mv "$tmp" ~/.claude/settings.json
+fi
+
+if [ -d ~/.t3/userdata ]; then
+    mkdir -p ~/.t3/userdata/themes
+    t3_colors=$(cat <<EOT
+{
+  "canvas": "#$bg",
+  "chrome": "#$bg",
+  "toolbar": "#$bg",
+  "toolbarForeground": "#$fg",
+  "toolbarBorder": "#$edge",
+  "toolbarControl": "#$(mix "$bg" "$fg" 8)",
+  "toolbarControlForeground": "#$fg",
+  "toolbarControlHover": "#$(mix "$bg" "$fg" 14)",
+
+  "surface": "#$(mix "$bg" "$fg" 4)",
+  "surfaceRaised": "#$(mix "$bg" "$fg" 8)",
+  "surfaceOverlay": "#$(mix "$bg" "$fg" 11)",
+
+  "text": "#$fg",
+  "textMuted": "#$dim",
+  "border": "#$edge",
+  "input": "#$(mix "$bg" "$fg" 22)",
+  "focus": "#$accent",
+  "accent": "#$accent",
+  "accentForeground": "#$bg",
+
+  "secondary": "#$(mix "$bg" "$fg" 10)",
+  "secondaryForeground": "#$fg",
+  "muted": "#$(mix "$bg" "$fg" 6)",
+  "mutedForeground": "#$dim",
+  "placeholder": "#$dimmer",
+  "secondaryLabel": "#$dim",
+  "iconMuted": "#$dim",
+
+  "error": "#$(mix "$red" "$fg" 35)",
+  "errorForeground": "#$(mix "$red" "$fg" 35)",
+  "errorSurface": "#$(mix "$bg" "$red" 18)",
+  "warning": "#$(mix "$yellow" "$fg" 35)",
+  "warningForeground": "#$(mix "$yellow" "$fg" 35)",
+  "warningSurface": "#$(mix "$bg" "$yellow" 18)",
+
+  "update": "#$accent",
+  "updateForeground": "#$fg",
+  "updateSurface": "#$(mix "$bg" "$accent" 18)",
+  "accentSurface": "#$(mix "$bg" "$accent" 16)",
+  "accentSurfaceForeground": "#$fg",
+
+  "messageSurface": "#$(mix "$bg" "$accent" 20)",
+  "messageForeground": "#$fg",
+  "messageAction": "#$accent",
+  "messageActionForeground": "#$bg",
+  "messageActionHover": "#$(mix "$accent" "$fg" 20)",
+
+  "codeBackground": "#$dark_bg",
+  "codeForeground": "#$fg",
+
+  "sidebar": "#$dark_bg",
+  "sidebarForeground": "#$fg",
+  "sidebarMutedForeground": "#$dim",
+  "sidebarControlSurface": "#$(mix "$dark_bg" "$fg" 10)",
+  "sidebarRowHover": "#$(mix "$dark_bg" "$fg" 6)",
+  "sidebarRowActive": "#$(mix "$dark_bg" "$accent" 18)",
+  "sidebarRowSelected": "#$selection",
+  "sidebarBorder": "#$edge",
+
+  "terminalBackground": "#$bg",
+  "terminalForeground": "#$fg",
+  "terminalCursor": "#$bright7",
+  "terminalSelection": "#$selection",
+  "terminalScrollbar": "#$edge",
+  "terminalScrollbarHover": "#$dim"
+}
+EOT
+)
+    tmp=$(mktemp ~/.t3/userdata/themes/apollo.json.XXXXXX)
+    if jq -n --argjson colors "$t3_colors" --arg bg "#$bg" --arg accent "#$accent" \
+        '{name: "Apollo", appearance: "dark", canvas: $bg, accent: $accent, colors: $colors, variants: {light: $colors}}' > "$tmp"; then
+        mv "$tmp" ~/.t3/userdata/themes/apollo.json
+    else
+        rm -f "$tmp"
+    fi
+fi
+if [ -d ~/.config/vesktop/settings ]; then
+    black=000000
+    cat > ~/.config/vesktop/settings/quickCss.css <<EOT
+/* Generated by bin/apply-theme from palette.json, do not edit (colour variables of the system24 theme) */
+:root:root {
+    --colors: on;
+
+    --text-0: #$bg;
+    --text-1: #$bright7;
+    --text-2: #$fg;
+    --text-3: #$(mix "$fg" "$bg" 15);
+    --text-4: #$(mix "$fg" "$bg" 40);
+    --text-5: #$(mix "$fg" "$bg" 62);
+
+    --bg-1: #$(mix "$bg" "$fg" 13);
+    --bg-2: #$(mix "$bg" "$fg" 9);
+    --bg-3: #$(mix "$bg" "$fg" 5);
+    --bg-4: #$bg;
+    --hover: #${fg}1a;
+    --active: #${fg}33;
+    --active-2: #${fg}4d;
+
+    --accent-1: #$(mix "$accent" "$fg" 25);
+    --accent-2: #$accent;
+    --accent-3: #$accent;
+    --accent-4: #$(mix "$accent" "$black" 12);
+    --accent-5: #$(mix "$accent" "$black" 24);
+    --accent-new: var(--red-2);
+
+    --online: var(--green-2);
+    --dnd: var(--red-2);
+    --idle: var(--yellow-2);
+    --streaming: var(--purple-2);
+    --offline: var(--text-4);
+
+    --red-1: #$(mix "$red" "$fg" 30);
+    --red-2: #$(mix "$red" "$fg" 15);
+    --red-3: #$red;
+    --red-4: #$(mix "$red" "$black" 12);
+    --red-5: #$(mix "$red" "$black" 24);
+
+    --green-1: #$(mix "$green" "$fg" 30);
+    --green-2: #$(mix "$green" "$fg" 15);
+    --green-3: #$green;
+    --green-4: #$(mix "$green" "$black" 12);
+    --green-5: #$(mix "$green" "$black" 24);
+
+    --blue-1: #$(mix "$blue" "$fg" 30);
+    --blue-2: #$(mix "$blue" "$fg" 15);
+    --blue-3: #$blue;
+    --blue-4: #$(mix "$blue" "$black" 12);
+    --blue-5: #$(mix "$blue" "$black" 24);
+
+    --yellow-1: #$(mix "$yellow" "$fg" 30);
+    --yellow-2: #$(mix "$yellow" "$fg" 15);
+    --yellow-3: #$yellow;
+    --yellow-4: #$(mix "$yellow" "$black" 12);
+    --yellow-5: #$(mix "$yellow" "$black" 24);
+
+    --purple-1: #$(mix "$magenta" "$fg" 30);
+    --purple-2: #$(mix "$magenta" "$fg" 15);
+    --purple-3: #$magenta;
+    --purple-4: #$(mix "$magenta" "$black" 12);
+    --purple-5: #$(mix "$magenta" "$black" 24);
+}
+EOT
+fi
+)
+
+(
+set +e
+seq=$(printf '\033]10;#%s\033\\\033]11;#%s\033\\' "$fg" "$bg")
+i=0
+for c in $regular0 $regular1 $regular2 $regular3 $regular4 $regular5 $regular6 $regular7 \
+         $bright0 $bright1 $bright2 $bright3 $bright4 $bright5 $bright6 $bright7; do
+    seq+=$(printf '\033]4;%d;#%s\033\\' "$i" "$c")
+    i=$((i + 1))
+done
+for pts in /dev/pts/[0-9]*; do
+    [ -O "$pts" ] || continue
+    timeout 1 sh -c 'printf "%s" "$1" > "$2"' sh "$seq" "$pts" 2>/dev/null &
+done
+wait
+sleep 0.3
+ps -C herdr -o pid=,tty=,args= | awk '$2 != "?" && $0 !~ /server/ { print $1 }' | xargs -r kill -WINCH 2>/dev/null
+)
+
+( set +e; "$(dirname "$(readlink -f "$0")")/recolor-icons" >/dev/null 2>&1 )
+
+(
+set +e
+mkdir -p ~/.cache
+log=~/.cache/apply-theme.log
+if command -v gsettings >/dev/null 2>&1; then
+    schema=org.gnome.desktop.interface
+    scheme=$(gsettings get $schema color-scheme 2>/dev/null); scheme=${scheme//\'/}
+    [ -n "$scheme" ] || scheme=prefer-dark
+    if [ "$scheme" = prefer-dark ]; then other=default; else other=prefer-dark; fi
+    gtk_theme=$(gsettings get $schema gtk-theme 2>/dev/null); gtk_theme=${gtk_theme//\'/}
+
+    gsettings set $schema color-scheme "$other" 2>/dev/null; r1=$?
+    sleep 0.4
+    gsettings set $schema color-scheme "$scheme" 2>/dev/null; r2=$?
+
+    if [ -n "$gtk_theme" ]; then
+        gsettings set $schema gtk-theme "" 2>/dev/null
+        sleep 0.3
+        gsettings set $schema gtk-theme "$gtk_theme" 2>/dev/null
+    fi
+fi
+
+windows=unknown
+if command -v hyprctl >/dev/null 2>&1; then
+    windows=$(hyprctl clients -j 2>/dev/null | jq '[.[] | select(.class == "org.gnome.Nautilus")] | length' 2>/dev/null)
+fi
+closed=no
+if pgrep -x nautilus >/dev/null 2>&1 && [ "$windows" = 0 ]; then
+    nautilus -q >/dev/null 2>&1
+    closed=yes
+fi
+
+echo "$(date +%T) scheme=$scheme flipped-via=${other:-none} gsettings=${r1:-?}/${r2:-?} nautilus-windows=$windows idle-nautilus-closed=$closed" > "$log"
+)

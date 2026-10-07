@@ -1,0 +1,16 @@
+# cava's own settings; the colours are the "apollo" theme that bin/apply-theme writes to ~/.config/cava/themes
+[general]
+framerate = 60
+bars = 0
+bar_width = 2
+bar_spacing = 1
+
+[output]
+method = noncurses
+channels = stereo
+
+[color]
+theme = 'apollo'
+
+[smoothing]
+noise_reduction = 77

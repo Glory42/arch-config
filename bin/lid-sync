@@ -1,0 +1,93 @@
+#!/bin/bash
+FLAG="${LID_FLAG:-${XDG_RUNTIME_DIR:-/tmp}/hypr-lid-docked}"
+LOG="${LID_LOG:-$HOME/.cache/lid.log}"
+LID_DIR="${LID_DIR:-/proc/acpi/button/lid}"
+DRM_DIR="${DRM_DIR:-/sys/class/drm}"
+STAMP="${LID_STAMP:-${XDG_RUNTIME_DIR:-/tmp}/lid-sync.last}"
+MIN_GAP="${LID_MIN_GAP:-2}"
+mode="${1:-}"
+
+mkdir -p "$(dirname "$LOG")" "$(dirname "$FLAG")"
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/lid-sync.lock"
+flock -w 5 9 || exit 0
+
+log() {
+    [ -f "$LOG" ] && [ "$(stat -c %s "$LOG")" -gt 100000 ] && mv "$LOG" "$LOG.1"
+    printf '%s %s\n' "$(date +%T)" "$*" >> "$LOG"
+}
+
+lid_closed() { grep -qs closed "$LID_DIR"/*/state; }
+
+external_connected() {
+    local dir name
+    for dir in "$DRM_DIR"/card*-*; do
+        name=${dir##*/}; name=${name#card*-}
+        [[ $name =~ ^(eDP|LVDS|DSI)- ]] && continue
+        [ "$(cat "$dir/status" 2>/dev/null)" = connected ] && return 0
+    done
+    return 1
+}
+
+panel_name() {
+    local dir name
+    for dir in "$DRM_DIR"/card*-*; do
+        name=${dir##*/}; name=${name#card*-}
+        [[ $name =~ ^(eDP|LVDS|DSI)- ]] && { echo "$name"; return; }
+    done
+    echo eDP-1
+}
+
+monitors() { hyprctl monitors all -j 2>/dev/null; }
+
+hypr_external_active() {
+    monitors | jq -e '.[] | select(.name | test("^(eDP|LVDS|DSI)-") | not) | select(.disabled == false)' >/dev/null 2>&1
+}
+
+panel_off_now() {
+    monitors | jq -e --arg n "$1" '.[] | select(.name == $n and .disabled == true)' >/dev/null 2>&1
+}
+
+summary() { monitors | jq -r '[.[] | "\(.name):\(if .disabled then "off" else "\(.width)x\(.height)" end)"] | join(" ")'; }
+
+hyprctl monitors >/dev/null 2>&1 || exit 0
+
+panel=$(panel_name)
+lid=open; lid_closed && lid=closed
+ext=no; external_connected && ext=yes
+
+if [ "$mode" = close ] && [ "$lid" = closed ] && [ "$ext" = no ]; then
+    hyprctl dispatch 'hl.dsp.global("apollo:airlock-lock")' >/dev/null 2>&1
+    locked=" locked"
+fi
+
+want=on
+[ "$lid" = closed ] && [ "$ext" = yes ] && hypr_external_active && want=off
+
+flag=on; [ -f "$FLAG" ] && flag=off
+now=on; panel_off_now "$panel" && now=off
+
+action=""
+if [ "$want" = off ] && { [ "$flag" = on ] || [ "$now" = on ]; }; then
+    action=disable
+elif [ "$want" = on ] && { [ "$flag" = off ] || [ "$now" = off ]; }; then
+    action=enable
+fi
+
+if [ -n "$action" ]; then
+    last=$(cat "$STAMP" 2>/dev/null || echo 0)
+    if [ $(( $(date +%s) - last )) -lt "$MIN_GAP" ]; then
+        log "$mode lid=$lid ext=$ext panel=$now want=$want: $action skipped, too soon after the last reload"
+        exit 0
+    fi
+    date +%s > "$STAMP"
+    if [ "$action" = disable ]; then touch "$FLAG"; else rm -f "$FLAG"; fi
+    hyprctl reload >/dev/null 2>&1
+    [ "$action" = enable ] && hyprctl dispatch "hl.dsp.dpms({ action = \"enable\", monitor = \"$panel\" })" >/dev/null 2>&1
+    sleep 0.3
+fi
+
+[ "$mode" = open ] && hyprctl dispatch 'hl.dsp.dpms({ action = "enable" })' >/dev/null 2>&1
+
+if [ -n "$action" ] || [ -n "$mode" ]; then
+    log "${mode:-watch} lid=$lid ext=$ext panel=$now want=$want${locked:-}${action:+ -> $action}: $(summary)"
+fi

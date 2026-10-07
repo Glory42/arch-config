@@ -1,0 +1,23 @@
+{
+  "collaboration_panel": {
+    "button": false
+  },
+  "cli_default_open_behavior": "existing_window",
+  "telemetry": {
+    "diagnostics": true,
+    "metrics": true,
+    "anthropic_retention": false
+  },
+  "icon_theme": {
+    "mode": "light",
+    "light": "Material Icon Theme",
+    "dark": "Catppuccin Latte"
+  },
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "dark",
+    "dark": "JetBrains Islands Dark",
+    "light": "Ayu Light"
+  }
+}

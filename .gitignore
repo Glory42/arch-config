@@ -1,0 +1,5 @@
+# Wallpapers live in their own repo (Glory42/wallpapers). install.sh links each folder here.
+theme/themes/*/wallpapers
+
+# Personal to-do and setup notes, kept on this machine only
+ROADMAP.md

@@ -1,0 +1,6 @@
+#!/bin/bash
+accent=$(jq -r '.accent // empty' ~/.config/theme/palette.json 2>/dev/null | cut -c1-6)
+if [[ $accent =~ ^[0-9a-fA-F]{6}$ ]]; then
+    exec fastfetch --logo-color-1 "38;2;$((16#${accent:0:2}));$((16#${accent:2:2}));$((16#${accent:4:2}))" "$@"
+fi
+exec fastfetch "$@"

@@ -1,0 +1,18 @@
+#!/bin/bash
+# One line for fastfetch: the name of the active theme and its colours as dots.
+T=~/.config/theme
+name=""
+for d in "$T"/themes/*/; do
+    if [ -f "$d/palette.json" ] && cmp -s "$d/palette.json" "$T/palette.json"; then
+        name=$(jq -r '.name // empty' "$d/theme.json" 2>/dev/null)
+        [ -n "$name" ] || name=$(basename "$d")
+        break
+    fi
+done
+[ -n "$name" ] || name="custom"
+dots=""
+for k in regular1 regular2 regular3 regular4 regular5 regular6; do
+    c=$(jq -r ".$k" "$T/palette.json")
+    dots+=$(printf '\033[38;2;%d;%d;%dm● ' "0x${c:0:2}" "0x${c:2:2}" "0x${c:4:2}")
+done
+printf '%s %s\033[0m\n' "$name" "$dots"

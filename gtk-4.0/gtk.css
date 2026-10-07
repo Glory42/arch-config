@@ -1,0 +1,11 @@
+/* Generated from Projects/hyprland-dots palette
+   bg #070709 / fg #F7EABC / accent #b26677
+   Source of truth: ~/Projects/hyprland-dots/gtk-4.0/gtk.css
+   Applied via: ~/.config/gtk-4.0 -> DOTS/gtk-4.0 (see install.sh) */
+@import url("colors.css");
+
+/* Nautilus sidebar + view tweaks */
+.sidebar {
+  background-color: @sidebar_bg_color;
+  color: @sidebar_fg_color;
+}
