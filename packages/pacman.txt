@@ -97,7 +97,6 @@ lazydocker
 lazygit
 opencode
 jq
-socat
 yq
 unzip
 7zip
