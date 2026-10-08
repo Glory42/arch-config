@@ -32,8 +32,8 @@ hl.config({
 
         shadow           = {
             enabled      = true,
-            range        = 20,
-            render_power = 5,
+            range        = 12,
+            render_power = 4,
             color        = "rgba(" .. theme.accent:sub(1, 6) .. "10)", -- the accent, soft, so each theme glows its own colour
         },
 
