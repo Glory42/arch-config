@@ -3,21 +3,26 @@
     "button": false
   },
   "cli_default_open_behavior": "existing_window",
+
+  "session": {
+    "trust_all_worktrees": true
+  },
+
   "telemetry": {
     "diagnostics": true,
     "metrics": true,
     "anthropic_retention": false
   },
   "icon_theme": {
-    "mode": "light",
-    "light": "Material Icon Theme",
-    "dark": "Catppuccin Latte"
+    "mode": "dark",
+    "light": "Light Charmed Icons",
+    "dark": "Base Charmed Icons"
   },
   "ui_font_size": 16,
   "buffer_font_size": 15,
   "theme": {
     "mode": "dark",
-    "dark": "JetBrains Islands Dark",
+    "dark": "Carbonfox - opaque",
     "light": "Ayu Light"
   }
 }
