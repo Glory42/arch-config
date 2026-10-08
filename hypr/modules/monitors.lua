@@ -10,8 +10,19 @@ local laptop = {
     mode     = "2560x1600@60",
     position = "0x0",
     scale    = "2",
+    disabled = false, -- without this a rule does not turn a screen that was disabled back on
 }
-hl.monitor(laptop)
+
+-- Set while the lid is closed with another screen connected; a reload (every theme change) reads it so the laptop screen stays off
+local lid_flag = (os.getenv("XDG_RUNTIME_DIR") or "/tmp") .. "/hypr-lid-closed"
+
+local flag = io.open(lid_flag, "r")
+if flag then
+    flag:close()
+    hl.monitor({ output = laptop.output, disabled = true })
+else
+    hl.monitor(laptop)
+end
 
 -- 2. Harici Ekran: BenQ GW2270 (FHD, Laptopun Sağında), starts where the laptop screen ends (2560 / 2 = 1280)
 hl.monitor({
@@ -29,23 +40,31 @@ hl.monitor({
     scale    = "auto",
 })
 
--- Lid: with another screen connected, closing it turns the laptop screen off and opening it turns it on
-local lid_closed_with_screen = false
+-- Lid: with another screen connected, closing it turns the laptop screen off and opening it turns it on; alone, closing it suspends (Apollo locks first)
+local function external_screens()
+    local count = 0
+    for _, monitor in ipairs(hl.get_monitors()) do
+        if monitor.name ~= laptop.output then
+            count = count + 1
+        end
+    end
+    return count
+end
 
 hl.bind("switch:on:Lid Switch", function()
-    if #hl.get_monitors() > 1 then
-        lid_closed_with_screen = true
+    if external_screens() > 0 then
+        local file = io.open(lid_flag, "w")
+        if file then
+            file:close()
+        end
         hl.monitor({ output = laptop.output, disabled = true })
     else
-        hl.dispatch(hl.dsp.global("apollo:airlock-lock"))
-        --hl.dispatch(hl.dsp.dpms({ action = "disable" }))
+        hl.exec_cmd("systemctl suspend")
     end
 end, { locked = true })
 
 hl.bind("switch:off:Lid Switch", function()
-    if lid_closed_with_screen then
-        lid_closed_with_screen = false
-        hl.monitor(laptop)
-    end
+    os.remove(lid_flag)
+    hl.monitor(laptop)
     hl.dispatch(hl.dsp.dpms({ action = "enable" }))
 end, { locked = true })
