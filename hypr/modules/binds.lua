@@ -26,7 +26,8 @@ hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("uwsm-app -- foot --app-id=TU
 hl.bind(mainMod .. " + SHIFT + RETURN", hl.dsp.exec_cmd("uwsm-app -- xdg-terminal-exec herdr"))
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd(music))
 
--- Apollo -- global shortcuts, answered by the running shell
+-- Apollo -- capsule shortcuts, answered by the running shell
+hl.bind(mainMod .. " + CTRL + SHIFT + T", hl.dsp.exec_cmd(home .. "/.local/bin/apollo-toggle")) -- kills Apollo if it runs, starts it if it does not
 hl.bind(mainMod .. " + CTRL + W", hl.dsp.global("apollo:capsule-toggle-wifi"))
 hl.bind(mainMod .. " + CTRL + B", hl.dsp.global("apollo:capsule-toggle-bt"))
 hl.bind(mainMod .. " + CTRL + M", hl.dsp.global("apollo:capsule-toggle-music"))
@@ -40,11 +41,12 @@ hl.bind(mainMod .. " + CTRL + X", hl.dsp.global("apollo:capsule-close"))
 hl.bind(mainMod .. " + CTRL + right", hl.dsp.global("apollo:capsule-next"))
 hl.bind(mainMod .. " + CTRL + left", hl.dsp.global("apollo:capsule-prev"))
 
--- Apollo -- switches
+-- Apollo -- capsule switches
 hl.bind(mainMod .. " + CTRL + D", hl.dsp.global("apollo:silence-toggle"))
 hl.bind(mainMod .. " + CTRL + K", hl.dsp.global("apollo:nightlight-toggle"))
 hl.bind(mainMod .. " + CTRL + I", hl.dsp.global("apollo:awake-toggle"))
 
+-- Apollo -- pad shortcuts
 hl.bind(mainMod .. " + SPACE", hl.dsp.global("apollo:launchpad-toggle"))
 hl.bind(mainMod .. " + ESCAPE", hl.dsp.global("apollo:splashdown-toggle"))
 hl.bind("XF86PowerOff", hl.dsp.global("apollo:splashdown-toggle"), { locked = true })

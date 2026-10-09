@@ -1,0 +1,10 @@
+#!/bin/bash
+config="$HOME/.config/quickshell/shell.qml"
+
+if hyprctl -j monitors 2>/dev/null | jq -e 'any(.[]; (.solitaryBlockedBy // []) | index("LOCK"))' >/dev/null 2>&1; then
+    exit 1
+fi
+
+if ! timeout 5 qs kill -p "$config" >/dev/null 2>&1; then
+    setsid -f qs -n -p "$config" >/dev/null 2>&1
+fi
