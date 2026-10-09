@@ -34,7 +34,7 @@ hl.window_rule({
 hl.window_rule({
     name      = "browser-to-workspace-3",
     match     = { class = "helium" },
---    workspace = "3 silent",
+    workspace = "3 silent",
 })
 
 hl.window_rule({
