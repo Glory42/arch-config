@@ -31,7 +31,6 @@ hl.bind(mainMod .. " + CTRL + W", hl.dsp.global("apollo:capsule-toggle-wifi"))
 hl.bind(mainMod .. " + CTRL + B", hl.dsp.global("apollo:capsule-toggle-bt"))
 hl.bind(mainMod .. " + CTRL + M", hl.dsp.global("apollo:capsule-toggle-music"))
 hl.bind(mainMod .. " + CTRL + Q", hl.dsp.global("apollo:capsule-toggle-quick"))
-hl.bind(mainMod .. " + CTRL + T", hl.dsp.global("apollo:capsule-toggle-timer"))
 hl.bind(mainMod .. " + CTRL + N", hl.dsp.global("apollo:capsule-toggle-notifications"))
 hl.bind(mainMod .. " + CTRL + C", hl.dsp.global("apollo:capsule-toggle-calendar"))
 hl.bind(mainMod .. " + CTRL + E", hl.dsp.global("apollo:capsule-toggle-weather"))
@@ -41,7 +40,7 @@ hl.bind(mainMod .. " + CTRL + X", hl.dsp.global("apollo:capsule-close"))
 hl.bind(mainMod .. " + CTRL + right", hl.dsp.global("apollo:capsule-next"))
 hl.bind(mainMod .. " + CTRL + left", hl.dsp.global("apollo:capsule-prev"))
 
--- Switches
+-- Apollo -- switches
 hl.bind(mainMod .. " + CTRL + D", hl.dsp.global("apollo:silence-toggle"))
 hl.bind(mainMod .. " + CTRL + K", hl.dsp.global("apollo:nightlight-toggle"))
 hl.bind(mainMod .. " + CTRL + I", hl.dsp.global("apollo:awake-toggle"))
