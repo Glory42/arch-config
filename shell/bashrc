@@ -1,0 +1,25 @@
+[[ $- != *i* ]] && return
+
+[[ ":$PATH:" == *":$HOME/.local/bin:"* ]] || export PATH="$HOME/.local/bin:$PATH"
+export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR:-/run/user/$UID}/ssh-agent.socket"
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+command -v mise &>/dev/null && eval "$(mise activate bash)"
+command -v starship &>/dev/null && eval "$(starship init bash)"
+command -v zoxide &>/dev/null && eval "$(zoxide init bash --cmd cd)"
+
+if command -v fzf &>/dev/null; then
+  [[ -f /usr/share/fzf/completion.bash ]] && source /usr/share/fzf/completion.bash
+  [[ -f /usr/share/fzf/key-bindings.bash ]] && source /usr/share/fzf/key-bindings.bash
+fi
+
+command -v eza &>/dev/null && alias ls='eza -lh --group-directories-first --icons=auto'
+command -v bat &>/dev/null && alias cat='bat --paging=never'
+alias ff='fetch'
+
+if [[ -z $HERDR_SOCKET_PATH && -z $TMUX && -z $FETCHED ]]; then
+  export FETCHED=1
+  command -v fetch &>/dev/null && fetch
+fi
