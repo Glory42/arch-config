@@ -44,5 +44,4 @@ end
 
 hl.bind(mainMod .. " + C", universal("CTRL", "C", "CTRL + SHIFT", "C"))
 hl.bind(mainMod .. " + V", universal("CTRL", "V", "CTRL + SHIFT", "V"))
--- terminals have no cut, so fall back to copy there
-hl.bind(mainMod .. " + X", universal("CTRL", "X", "CTRL + SHIFT", "C"))
+hl.bind(mainMod .. " + X", universal("CTRL", "X", "CTRL + SHIFT", "C")) -- terminals have no cut, so fall back to copy there

@@ -4,7 +4,7 @@
 
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
 
--- 1. Ana Ekran: Zenbook Dâhili Monitör (2K+, 2x Ölçeklenmiş)
+-- 1. Main Screen of laptop: Zenbook Monitor (2K+, 2x scale)
 local laptop = {
     output   = "eDP-1",
     mode     = "2560x1600@60",
@@ -24,7 +24,7 @@ else
     hl.monitor(laptop)
 end
 
--- 2. Harici Ekran: BenQ GW2270 (FHD, Laptopun Sağında), starts where the laptop screen ends (2560 / 2 = 1280)
+-- 2. External Screen: BenQ GW2270, starts where the laptop screen ends (2560 / 2 = 1280)
 hl.monitor({
     output   = "HDMI-A-1",
     mode     = "1920x1080@60",
