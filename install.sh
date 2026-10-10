@@ -2,6 +2,11 @@
 set -e
 DOTS="$(cd "$(dirname "$0")" && pwd)"
 
+if [ "$(id -u)" -eq 0 ]; then
+    echo "run this as your normal user, it asks for sudo by itself"
+    exit 1
+fi
+
 link() {
     if [ -e "$2" ] && [ ! -L "$2" ]; then
         mv "$2" "$2.bak.$(date +%s)"
@@ -25,8 +30,17 @@ if ! command -v yay >/dev/null 2>&1; then
 fi
 
 say "now the AUR, where strangers write the packages and we install them anyway"
-command -v xdg-terminal-exec >/dev/null 2>&1 || yay -S --needed xdg-terminal-exec-git
-yay -S --needed $(pkgs "$DOTS/packages/aur.txt")
+curl -fsS https://download.spotify.com/debian/pubkey_5384CE82BA52C83A.gpg | gpg --import - \
+    || echo "could not fetch the Spotify signing key: the spotify package may refuse to build"
+yay -S --needed $(pkgs "$DOTS/packages/aur.txt") \
+    || echo "some AUR packages did not install: the rest of the setup goes on, run yay -S --needed again for them later"
+
+say "teaching the system its manners: iwd for Wi-Fi, a power button that waits for Apollo, services, the docker group"
+sudo mkdir -p /etc/NetworkManager/conf.d /etc/systemd/logind.conf.d
+printf '[device]\nwifi.backend=iwd\n' | sudo tee /etc/NetworkManager/conf.d/wifi_backend.conf >/dev/null
+printf '[Login]\nHandlePowerKey=ignore\n' | sudo tee /etc/systemd/logind.conf.d/10-ignore-power-button.conf >/dev/null
+sudo systemctl enable NetworkManager.service bluetooth.service cups.socket docker.socket ufw.service paccache.timer ly@tty1.service
+sudo usermod -aG docker "$USER"
 
 say "symlinking everything, so deleting this folder later will be a dramatic act"
 mkdir -p ~/.config ~/.local
@@ -79,7 +93,7 @@ done
 echo 'foot.desktop' > ~/.config/xdg-terminals.list
 
 say "painting everything in one colour, as is tradition"
-"$DOTS/bin/apply-theme"
-"$DOTS/bin/apply-appearance"
+"$DOTS/bin/apply-theme" || echo "apply-theme did not finish cleanly: run it again after logging in"
+"$DOTS/bin/apply-appearance" || echo "apply-appearance did not finish cleanly: run it again after logging in"
 
 say "done: log out and back in, then pretend it always looked this good"
