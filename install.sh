@@ -41,6 +41,12 @@ printf '[device]\nwifi.backend=iwd\n' | sudo tee /etc/NetworkManager/conf.d/wifi
 printf '[Login]\nHandlePowerKey=ignore\n' | sudo tee /etc/systemd/logind.conf.d/10-ignore-power-button.conf >/dev/null
 sudo systemctl enable NetworkManager.service bluetooth.service cups.socket docker.socket ufw.service paccache.timer ly@tty1.service
 sudo usermod -aG docker "$USER"
+systemctl --user enable --now ssh-agent.socket \
+    || echo "could not enable the ssh agent: run systemctl --user enable --now ssh-agent.socket after logging in"
+
+say "firewall: nothing in, everything out, and a door for LocalSend"
+sudo ufw default deny incoming && sudo ufw default allow outgoing && sudo ufw allow 53317 comment LocalSend && sudo ufw --force enable \
+    || echo "ufw rules did not apply: set them by hand later (sudo ufw status)"
 
 say "symlinking everything, so deleting this folder later will be a dramatic act"
 mkdir -p ~/.config ~/.local
@@ -57,6 +63,11 @@ done
 mkdir -p ~/.config/uwsm
 grep -qs '\.local/bin' ~/.config/uwsm/env || echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.config/uwsm/env
 grep -qs 'mise/shims' ~/.config/uwsm/env || echo 'export PATH="$HOME/.local/share/mise/shims:$PATH"' >> ~/.config/uwsm/env
+
+link "$DOTS/shell/bashrc" ~/.bashrc
+
+mkdir -p ~/.config/mise
+link "$DOTS/mise/config.toml" ~/.config/mise/config.toml
 
 mkdir -p ~/.config/herdr
 link "$DOTS/herdr/config.toml" ~/.config/herdr/config.toml
@@ -91,6 +102,9 @@ for t in "$DOTS"/theme/themes/*/; do
 done
 
 echo 'foot.desktop' > ~/.config/xdg-terminals.list
+
+say "installing the toolchains, node and friends, this is the other tea moment"
+mise install || echo "mise could not install everything: run mise install again later"
 
 say "painting everything in one colour, as is tradition"
 "$DOTS/bin/apply-theme" || echo "apply-theme did not finish cleanly: run it again after logging in"
