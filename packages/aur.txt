@@ -3,11 +3,10 @@
 helium-browser-bin
 herdr-bin
 t3code-bin
+spotify
 spicetify-cli
 spicetify-marketplace-bin    # the theme store inside Spotify
-spotify
 vesktop-bin
-slack-desktop
 postman-bin
 mullvad-vpn-bin
 localsend
