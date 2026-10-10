@@ -10,6 +10,7 @@ quickshell
 awww
 xdg-desktop-portal-hyprland
 xdg-utils
+xdg-terminal-exec
 qt5-wayland
 qt6-wayland
 wl-clipboard
@@ -42,19 +43,16 @@ fastfetch
 chafa
 btop
 cava
-htop
 neovim
-nano
-tmux
 
 # Sound, network, bluetooth, power
+rtkit
 pipewire-alsa
 pipewire-jack
 pipewire-pulse
 wireplumber
 gst-plugin-pipewire
 networkmanager
-network-manager-applet
 iwd
 bluez
 bluez-utils
@@ -78,9 +76,10 @@ imagemagick
 obsidian
 keepassxc
 chromium
-firefox
 zed
 seahorse
+qbittorrent
+prismlauncher
 gnome-keyring
 system-config-printer
 cups

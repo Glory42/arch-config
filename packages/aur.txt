@@ -1,4 +1,4 @@
-# AUR, installed by install.sh with yay: one name per line (xdg-terminal-exec-git is handled in install.sh)
+# AUR, installed by install.sh with yay: one name per line
 
 helium-browser-bin
 herdr-bin
@@ -7,8 +7,5 @@ spotify
 spicetify-cli
 spicetify-marketplace-bin    # the theme store inside Spotify
 vesktop-bin
-postman-bin
-mullvad-vpn-bin
 localsend
-aether
 nbfc-linux    # fan control for the Zenbook
