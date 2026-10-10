@@ -32,23 +32,35 @@ hl.window_rule({
 ------------------
 
 hl.window_rule({
-    name      = "browser-to-workspace-3",
-    match     = { class = "helium" },
-    workspace = "3 silent",
-})
-
-hl.window_rule({
     name              = "zed-to-workspace-1",
     match             = { class = "dev.zed.Zed" },
     workspace         = "1 silent",
     focus_on_activate = false,
 })
 
+
 hl.window_rule({
-    -- Spotify must run as a native Wayland window for this to match (see spotify/spotify-flags.conf):
+    name      = "browser-to-workspace-3",
+    match     = { class = "helium" },
+    workspace = "3 silent",
+})
+
+hl.window_rule({
+    name      = "browser-incognito-to-workspace-4",
+    match     = { class = "helium", title = "New Incognito Tab.*" },
+    workspace = "4 silent",
+})
+
+hl.window_rule({
     name      = "spotify-to-workspace-6",
     match     = { class = "spotify" },
     workspace = "5 silent",
+})
+
+hl.window_rule({
+     name      = "vesktop-to-workspace-5",
+     match     = { class = "vesktop" },
+    workspace = "6 silent",
 })
 
 ---------------
@@ -228,17 +240,7 @@ hl.window_rule({
 --     workspace = "4 silent",
 -- })
 --
--- hl.window_rule({
---     name      = "slack-to-workspace-5",
---     match     = { class = "Slack" },
---     workspace = "5 silent",
--- })
---
--- hl.window_rule({
---     name      = "vesktop-to-workspace-5",
---     match     = { class = "vesktop" },
---     workspace = "5 silent",
--- })
+
 
 ---------------------------
 ---- CLASS SET LATE ----
