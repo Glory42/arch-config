@@ -56,6 +56,7 @@ networkmanager
 iwd
 bluez
 bluez-utils
+openssh
 power-profiles-daemon
 
 # Look: fonts, icons, GTK theme
