@@ -14,25 +14,30 @@ link() {
     ln -sfn "$1" "$2"
 }
 
+sudo -v
+while true; do sudo -n true; sleep 50; kill -0 "$$" 2>/dev/null || exit; done 2>/dev/null &
+keepalive=$!
+trap 'kill "$keepalive" 2>/dev/null' EXIT
+
 pkgs() { grep -vE '^\s*(#|$)' "$1" | sed 's/[[:space:]]*#.*//'; }
 say() { echo; echo "==> $*"; }
 
 say "installing packages: this is a good time to make tea"
-sudo pacman -S --needed $(pkgs "$DOTS/packages/pacman.txt")
+sudo pacman -S --needed --noconfirm $(pkgs "$DOTS/packages/pacman.txt")
 
 if ! command -v yay >/dev/null 2>&1; then
     say "no yay, so building the thing that builds things"
-    sudo pacman -S --needed git base-devel
+    sudo pacman -S --needed --noconfirm git base-devel
     tmp=$(mktemp -d)
     git clone https://aur.archlinux.org/yay-bin.git "$tmp/yay-bin"
-    (cd "$tmp/yay-bin" && makepkg -si)
+    (cd "$tmp/yay-bin" && makepkg -si --noconfirm)
     rm -rf "$tmp"
 fi
 
 say "now the AUR, where strangers write the packages and we install them anyway"
 curl -fsS https://download.spotify.com/debian/pubkey_5384CE82BA52C83A.gpg | gpg --import - \
     || echo "could not fetch the Spotify signing key: the spotify package may refuse to build"
-yay -S --needed $(pkgs "$DOTS/packages/aur.txt") \
+yay -S --needed --noconfirm --answerclean None --answerdiff None --answeredit None --answerupgrade None $(pkgs "$DOTS/packages/aur.txt") \
     || echo "some AUR packages did not install: the rest of the setup goes on, run yay -S --needed again for them later"
 
 say "teaching the system its manners: iwd for Wi-Fi, a power button that waits for Apollo, services, the docker group"
@@ -46,7 +51,7 @@ systemctl --user enable --now ssh-agent.socket \
 
 say "firewall: nothing in, everything out, and a door for LocalSend"
 sudo ufw default deny incoming && sudo ufw default allow outgoing && sudo ufw allow 53317 comment LocalSend && sudo ufw --force enable \
-    || echo "ufw rules did not apply: set them by hand later (sudo ufw status)"
+    || echo "ufw rules did not apply (a kernel update during the install can cause this): reboot, then run the four ufw lines from install.sh by hand"
 
 say "symlinking everything, so deleting this folder later will be a dramatic act"
 mkdir -p ~/.config ~/.local
