@@ -61,8 +61,13 @@ cat > ~/.config/gtk-4.0/colors.css <<EOF
 @define-color headerbar_bg_color #$bg;
 @define-color headerbar_fg_color #$fg;
 @define-color headerbar_border_color #$edge;
+@define-color headerbar_backdrop_color #$bg;
 @define-color sidebar_bg_color #$bg;
 @define-color sidebar_fg_color #$fg;
+@define-color sidebar_backdrop_color #$bg;
+@define-color secondary_sidebar_bg_color #$bg;
+@define-color secondary_sidebar_fg_color #$fg;
+@define-color secondary_sidebar_backdrop_color #$bg;
 @define-color card_bg_color #$edge;
 @define-color card_fg_color #$fg;
 @define-color popover_bg_color #$edge;
@@ -174,6 +179,7 @@ theme[gradient_color_5]="#$fg"
 theme[gradient_color_6]="#$bright7"
 theme[gradient_color_7]="#$bright7"
 EOT
+    [ -f ~/.config/btop/btop.conf ] && sed -i 's|^color_theme = .*|color_theme = "apollo"|' ~/.config/btop/btop.conf
     pkill -USR2 -x btop 2>/dev/null || true
 fi
 
