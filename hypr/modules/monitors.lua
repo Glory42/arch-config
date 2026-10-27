@@ -94,8 +94,8 @@ hl.on("monitor.removed", function(monitor)
         if first_external(monitor and monitor.name) == nil then
             os.remove(lid_flag)
             hl.monitor(laptop)
-            -- logind only acts when the lid closes, not when the last screen goes away with it already closed
-            hl.exec_cmd("busctl get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager LidClosed | grep -q true && systemctl suspend")
+            -- logind only acts when the lid closes, not when the last screen goes away with it already closed; the wait lets the laptop screen come back first, or the lock screen has no screen to go on
+            hl.exec_cmd("sleep 2 && busctl get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager LidClosed | grep -q true && systemctl suspend")
         end
     end
 end)
