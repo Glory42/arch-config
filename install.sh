@@ -95,11 +95,19 @@ link "$DOTS/vesktop/themes" ~/.config/vesktop/themes
 link "$DOTS/vesktop/quickCss.css" ~/.config/vesktop/settings/quickCss.css
 
 say "cloning Apollo, the part of this that actually does the work"
-[ -d ~/Projects/apollo-qml ] || git clone git@github.com:Glory42/apollo-qml.git ~/Projects/apollo-qml
+clone() {
+    [ -d ~/Projects/"$1" ] && return
+    git clone https://github.com/Glory42/"$1".git ~/Projects/"$1" && git -C ~/Projects/"$1" remote set-url --push origin git@github.com:Glory42/"$1".git
+}
+
+clone apollo-qml
 link ~/Projects/apollo-qml ~/.config/quickshell
+mkdir -p ~/.config/systemd/user
+link "$DOTS/systemd/apollo.service" ~/.config/systemd/user/apollo.service
+systemctl --user daemon-reload 2>/dev/null || true
 
 say "fetching the wallpapers, the heaviest part of a config with no code"
-[ -d ~/Projects/wallpapers ] || git clone git@github.com:Glory42/wallpapers.git ~/Projects/wallpapers \
+clone wallpapers \
     || echo "could not clone the wallpapers repo: themes will have no pictures until ~/Projects/wallpapers exists"
 for t in "$DOTS"/theme/themes/*/; do
     name=$(basename "$t")
