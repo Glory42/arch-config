@@ -51,6 +51,43 @@ local function external_screens()
     return count
 end
 
+-- With an external screen connected, these workspaces always live on it
+local external_workspaces = { 3, 4, 6, 7 }
+local workspace_rules = {}
+
+local function first_external(removed)
+    for _, monitor in ipairs(hl.get_monitors()) do
+        if monitor.name ~= laptop.output and monitor.name ~= removed then
+            return monitor.name
+        end
+    end
+end
+
+local function place_external_workspaces(removed)
+    local target = first_external(removed)
+    for _, rule in pairs(workspace_rules) do
+        rule:set_enabled(false)
+    end
+    if not target then
+        return
+    end
+    for _, id in ipairs(external_workspaces) do
+        local key = target .. ":" .. id
+        if workspace_rules[key] then
+            workspace_rules[key]:set_enabled(true)
+        else
+            workspace_rules[key] = hl.workspace_rule({ workspace = tostring(id), monitor = target })
+        end
+        if hl.get_workspace(id) then
+            hl.dispatch(hl.dsp.workspace.move({ workspace = id, monitor = target }))
+        end
+    end
+end
+
+place_external_workspaces()
+hl.on("monitor.added", function() place_external_workspaces() end)
+hl.on("monitor.removed", function(monitor) place_external_workspaces(monitor and monitor.name) end)
+
 hl.bind("switch:on:Lid Switch", function()
     if external_screens() > 0 then
         local file = io.open(lid_flag, "w")

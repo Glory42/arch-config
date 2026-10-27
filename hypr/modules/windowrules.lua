@@ -34,15 +34,15 @@ hl.window_rule({
 hl.window_rule({
     name              = "zed-to-workspace-1",
     match             = { class = "dev.zed.Zed" },
-    workspace         = "1 silent",
-    focus_on_activate = false,
+    workspace         = "1",
+    focus_on_activate = true,
 })
 
 
 hl.window_rule({
     name      = "browser-to-workspace-3",
     match     = { class = "helium" },
-    workspace = "3 silent",
+    workspace = "3",
 })
 
 hl.window_rule({
@@ -52,15 +52,21 @@ hl.window_rule({
 })
 
 hl.window_rule({
-    name      = "spotify-to-workspace-6",
+    name      = "spotify-to-workspace-5",
     match     = { class = "spotify" },
-    workspace = "5 silent",
+    workspace = "5",
 })
 
 hl.window_rule({
-     name      = "vesktop-to-workspace-5",
+    name = "beeper-to-workspace-5",
+    match = { class = "Beeper" },
+    workspace = "5",
+})
+
+hl.window_rule({
+     name      = "vesktop-to-workspace-6",
      match     = { class = "vesktop" },
-    workspace = "6 silent",
+    workspace = "6",
 })
 
 ---------------
