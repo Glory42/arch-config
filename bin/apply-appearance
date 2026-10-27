@@ -47,6 +47,7 @@ if command -v gsettings >/dev/null 2>&1; then
     gsettings set $s monospace-font-name "$mono" 2>/dev/null || true
     gsettings set $s gtk-theme "$gtk_theme" 2>/dev/null || true
     gsettings set $s icon-theme "$icon" 2>/dev/null || true
+    gsettings set $s color-scheme prefer-dark 2>/dev/null || true
 fi
 
 if [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ] && command -v hyprctl >/dev/null 2>&1; then
