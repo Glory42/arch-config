@@ -1,0 +1,10 @@
+[Unit]
+Description=Apollo shell
+PartOf=graphical-session.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+ExecStart=/usr/bin/qs -n -p %h/.config/quickshell/shell.qml
+Restart=on-failure
+RestartSec=2
