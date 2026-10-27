@@ -38,15 +38,17 @@ hl.gesture({
     action = "workspace"
 })
 
+local terminals = require("modules.terminals")
+
 hl.window_rule({
     name  = "terminal-touchpad-scroll",
-    match = { class = "(Alacritty|kitty|foot|org\\.codeberg\\.dnkl\\.foot)" },
+    match = { class = terminals.match },
     scroll_touchpad = 1.5,
 })
 
 hl.window_rule({
     name  = "tag-terminal",
-    match = { class = "(Alacritty|kitty|foot|org\\.codeberg\\.dnkl\\.foot)" },
+    match = { class = terminals.match },
     tag   = "+terminal",
 })
 -- Per-device overrides go here with hl.device({ name = "...", ... }) once

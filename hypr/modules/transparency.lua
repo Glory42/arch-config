@@ -5,10 +5,10 @@ local state_file = (os.getenv("XDG_STATE_HOME") or (os.getenv("HOME") .. "/.loca
 local levels = { active = 0.88, inactive = 0.78 }
 
 -- Apps that start see-through: terminals (herdr and tmux run inside them), Vesktop and Spotify
-local starts_see_through = {
-    "foot", "dropdown", "TUI.float", "Alacritty", "kitty", "com.mitchellh.ghostty", "org.wezfurlong.wezterm",
-    "vesktop", "spotify",
-}
+local starts_see_through = { "vesktop", "spotify" }
+for _, class in ipairs(require("modules.terminals").classes) do
+    table.insert(starts_see_through, class)
+end
 
 local M = {}
 
