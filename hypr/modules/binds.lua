@@ -93,10 +93,40 @@ hl.bind("ALT + TAB", hl.dsp.window.bring_to_top())
 hl.bind("ALT + SHIFT + TAB", hl.dsp.window.bring_to_top())
 
 -- Resize with SUPER + minus / equal (keycodes 20 and 21, layout independent)
-hl.bind(mainMod .. " + code:20", hl.dsp.window.resize({ x = -100, y = 0, relative = true }))
-hl.bind(mainMod .. " + code:21", hl.dsp.window.resize({ x = 100, y = 0, relative = true }))
-hl.bind(mainMod .. " + SHIFT + code:20", hl.dsp.window.resize({ x = 0, y = -100, relative = true }))
-hl.bind(mainMod .. " + SHIFT + code:21", hl.dsp.window.resize({ x = 0, y = 100, relative = true }))
+hl.bind(mainMod .. " + code:20", hl.dsp.window.resize({ x = -100, y = 0, relative = true }), { repeating = true })
+hl.bind(mainMod .. " + code:21", hl.dsp.window.resize({ x = 100, y = 0, relative = true }), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + code:20", hl.dsp.window.resize({ x = 0, y = -100, relative = true }), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + code:21", hl.dsp.window.resize({ x = 0, y = 100, relative = true }), { repeating = true })
+
+-- Other monitor: SUPER + ALT + arrow focuses the screen to that side, adding SHIFT sends the window to its workspace
+local function monitor_beside(step)
+    local monitors = hl.get_monitors()
+    local active = hl.get_active_monitor()
+    if #monitors < 2 or not active then
+        return nil
+    end
+    table.sort(monitors, function(a, b) return a.x < b.x end)
+    for i, monitor in ipairs(monitors) do
+        if monitor.name == active.name then
+            return monitors[(i - 1 + step) % #monitors + 1]
+        end
+    end
+end
+
+for key, step in pairs({ left = -1, right = 1 }) do
+    hl.bind(mainMod .. " + ALT + " .. key, function()
+        local monitor = monitor_beside(step)
+        if monitor then
+            hl.dispatch(hl.dsp.focus({ monitor = monitor.name }))
+        end
+    end)
+    hl.bind(mainMod .. " + ALT + SHIFT + " .. key, function()
+        local monitor = monitor_beside(step)
+        if monitor and monitor.active_workspace then
+            hl.dispatch(hl.dsp.window.move({ workspace = monitor.active_workspace.id }))
+        end
+    end)
+end
 
 -- Switch workspaces with mainMod + [0-9], move the active window with mainMod + SHIFT + [0-9]
 for i = 1, 10 do
