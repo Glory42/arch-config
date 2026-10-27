@@ -247,8 +247,10 @@ hl.window_rule({
 
 -- The Minecraft launcher is an XWayland window that gets its class only after it opens, so a rule cannot match it: float it from here, then size and centre it once it has stopped moving itself
 local floated = {}
-hl.on("window.destroy", function(window)
-    floated[window.address] = nil
+hl.on("window.close", function(window)
+    if window and window.address then
+        floated[window.address] = nil
+    end
 end)
 
 hl.on("window.class", function(window)
