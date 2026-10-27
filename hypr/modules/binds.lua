@@ -1,11 +1,11 @@
 ---------------------
 ---- MY PROGRAMS ----
 ---------------------
-local fileManager = "nautilus"
-local browser = "helium-browser"
-local browser2 = "chromium"
-local editor = "zeditor"
-local music = "spotify"
+local fileManager = "uwsm-app -- nautilus"
+local browser = "uwsm-app -- helium-browser"
+local browser2 = "uwsm-app -- chromium"
+local editor = "uwsm-app -- zeditor"
+local music = "uwsm-app -- spotify"
 
 ---------------------
 ---- KEYBINDINGS ----

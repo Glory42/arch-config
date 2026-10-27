@@ -65,9 +65,7 @@ for f in "$DOTS"/bin/*; do
     ln -sfn "$f" ~/.local/bin/"$(basename "$f")"
 done
 
-mkdir -p ~/.config/uwsm
-grep -qs '\.local/bin' ~/.config/uwsm/env || echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.config/uwsm/env
-grep -qs 'mise/shims' ~/.config/uwsm/env || echo 'export PATH="$HOME/.local/share/mise/shims:$PATH"' >> ~/.config/uwsm/env
+link "$DOTS/uwsm" ~/.config/uwsm
 
 link "$DOTS/shell/bashrc" ~/.bashrc
 
@@ -105,6 +103,8 @@ link ~/Projects/apollo-qml ~/.config/quickshell
 mkdir -p ~/.config/systemd/user
 link "$DOTS/systemd/apollo.service" ~/.config/systemd/user/apollo.service
 systemctl --user daemon-reload 2>/dev/null || true
+systemctl --user enable apollo.service hyprpolkitagent.service hyprsunset.service 2>/dev/null \
+    || echo "could not enable the session services: run systemctl --user enable apollo hyprpolkitagent hyprsunset after logging in"
 
 say "fetching the wallpapers, the heaviest part of a config with no code"
 clone wallpapers \
