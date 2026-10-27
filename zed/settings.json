@@ -1,4 +1,30 @@
 {
+  "global_lsp_settings": {
+    "button": false
+  },
+  "terminal": {
+    "button": false
+  },
+  "search": {
+    "button": false
+  },
+  "git_panel": {
+    "dock": "left"
+  },
+  "diagnostics": {
+    "button": false
+  },
+  "agent": {
+    "button": false,
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "outline_panel": {
+    "button": false
+  },
+  "debugger": {
+    "button": false
+  },
   "collaboration_panel": {
     "button": false
   },
