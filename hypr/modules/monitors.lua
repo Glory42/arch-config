@@ -40,7 +40,7 @@ hl.monitor({
     scale    = "auto",
 })
 
--- Lid: with another screen connected, closing it turns the laptop screen off and opening it turns it on; alone, closing it suspends (Apollo locks first)
+-- Lid: with another screen connected, closing it turns the laptop screen off and opening it turns it on; alone, logind suspends (Apollo locks first)
 local function external_screens()
     local count = 0
     for _, monitor in ipairs(hl.get_monitors()) do
@@ -86,7 +86,17 @@ end
 
 place_external_workspaces()
 hl.on("monitor.added", function() place_external_workspaces() end)
-hl.on("monitor.removed", function(monitor) place_external_workspaces(monitor and monitor.name) end)
+hl.on("monitor.removed", function(monitor)
+    place_external_workspaces(monitor and monitor.name)
+    local flag_file = io.open(lid_flag, "r")
+    if flag_file then
+        flag_file:close()
+        if first_external(monitor and monitor.name) == nil then
+            os.remove(lid_flag)
+            hl.monitor(laptop)
+        end
+    end
+end)
 
 hl.bind("switch:on:Lid Switch", function()
     if external_screens() > 0 then
@@ -95,8 +105,6 @@ hl.bind("switch:on:Lid Switch", function()
             file:close()
         end
         hl.monitor({ output = laptop.output, disabled = true })
-    else
-        hl.exec_cmd("systemctl suspend")
     end
 end, { locked = true })
 
