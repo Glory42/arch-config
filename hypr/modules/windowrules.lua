@@ -225,13 +225,6 @@ hl.layer_rule({
 })
 
 hl.window_rule({
-    -- The browser stays almost opaque when it is not the focused window
-    name    = "browser-opacity",
-    match   = { class = "helium" },
-    opacity = "1.0 0.985",
-})
-
-hl.window_rule({
     -- No screen lock or screen off while a video plays fullscreen (Apollo honours this)
     name         = "idle-inhibit-fullscreen",
     match        = { class = "(mpv|helium)" },
