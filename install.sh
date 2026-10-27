@@ -116,6 +116,7 @@ done
 
 echo 'foot.desktop' > ~/.config/xdg-terminals.list
 xdg-mime default imv.desktop image/png image/jpeg image/webp image/gif image/bmp image/svg+xml image/avif image/heif image/tiff
+xdg-mime default org.gnome.Evince.desktop application/pdf
 
 say "installing the toolchains, node and friends, this is the other tea moment"
 mise install || echo "mise could not install everything: run mise install again later"
