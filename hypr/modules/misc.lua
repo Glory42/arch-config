@@ -21,11 +21,15 @@ hl.config({
     cursor = {
         hide_on_key_press        = true,  -- cursor disappears while you type
         warp_on_change_workspace = 1,     -- cursor follows you to the new workspace
-        inactive_timeout         = 5,     -- cursor hides after three idle seconds
+        inactive_timeout         = 5,     -- cursor hides after five idle seconds
     },
 
     binds = {
         hide_special_on_workspace_change = true,
+    },
+
+    render = {
+        direct_scanout = 1, -- fullscreen video and games skip compositing; set to 0 if fullscreen apps flicker
     },
 
     xwayland = {
