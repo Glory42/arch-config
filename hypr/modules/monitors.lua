@@ -13,16 +13,43 @@ local laptop = {
     disabled = false, -- without this a rule does not turn a screen that was disabled back on
 }
 
--- Set while the lid is closed with another screen connected; a reload (every theme change) reads it so the laptop screen stays off
-local lid_flag = (os.getenv("XDG_RUNTIME_DIR") or "/tmp") .. "/hypr-lid-closed"
+local lid_policy = require("modules.lid_policy")
 
-local flag = io.open(lid_flag, "r")
-if flag then
-    flag:close()
-    hl.monitor({ output = laptop.output, disabled = true })
-else
-    hl.monitor(laptop)
+-- logind's word on the lid, so a reload (every theme change) keeps the laptop screen as it was
+local function lid_closed()
+    local reply = io.popen("busctl get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager LidClosed 2>/dev/null")
+    if not reply then
+        return false
+    end
+    local closed = reply:read("*a"):find("true") ~= nil
+    reply:close()
+    return closed
 end
+
+-- The other screens still connected, leaving out one that is going away
+local function external_screens(removed)
+    local count = 0
+    for _, monitor in ipairs(hl.get_monitors()) do
+        if monitor.name ~= laptop.output and monitor.name ~= removed then
+            count = count + 1
+        end
+    end
+    return count
+end
+
+local function apply(decision)
+    if decision.laptop_on then
+        hl.monitor(laptop)
+    else
+        hl.monitor({ output = laptop.output, disabled = true })
+    end
+    if decision.suspend then
+        -- The wait lets the laptop screen come back first, or the lock screen has no screen to go on
+        hl.exec_cmd("sleep 2 && busctl get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager LidClosed | grep -q true && systemctl suspend")
+    end
+end
+
+apply(lid_policy.decide("load", lid_closed(), external_screens()))
 
 -- 2. External Screen: BenQ GW2270, starts where the laptop screen ends (2560 / 2 = 1280)
 hl.monitor({
@@ -39,17 +66,6 @@ hl.monitor({
     position = "auto",
     scale    = "auto",
 })
-
--- Lid: with another screen connected, closing it turns the laptop screen off and opening it turns it on; alone, logind suspends (Apollo locks first)
-local function external_screens()
-    local count = 0
-    for _, monitor in ipairs(hl.get_monitors()) do
-        if monitor.name ~= laptop.output then
-            count = count + 1
-        end
-    end
-    return count
-end
 
 -- With an external screen connected, these workspaces always live on it
 local external_workspaces = { 3, 4, 6, 7 }
@@ -85,33 +101,29 @@ local function place_external_workspaces(removed)
 end
 
 place_external_workspaces()
-hl.on("monitor.added", function() place_external_workspaces() end)
-hl.on("monitor.removed", function(monitor)
-    place_external_workspaces(monitor and monitor.name)
-    local flag_file = io.open(lid_flag, "r")
-    if flag_file then
-        flag_file:close()
-        if first_external(monitor and monitor.name) == nil then
-            os.remove(lid_flag)
-            hl.monitor(laptop)
-            -- logind only acts when the lid closes, not when the last screen goes away with it already closed; the wait lets the laptop screen come back first, or the lock screen has no screen to go on
-            hl.exec_cmd("sleep 2 && busctl get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager LidClosed | grep -q true && systemctl suspend")
-        end
+
+-- With the lid open the laptop screen is already on, so a screen coming or going only matters with the lid shut
+hl.on("monitor.added", function()
+    place_external_workspaces()
+    if lid_closed() then
+        apply(lid_policy.decide("monitor_added", true, external_screens()))
     end
 end)
 
-hl.bind("switch:on:Lid Switch", function()
-    if external_screens() > 0 then
-        local file = io.open(lid_flag, "w")
-        if file then
-            file:close()
-        end
-        hl.monitor({ output = laptop.output, disabled = true })
+hl.on("monitor.removed", function(monitor)
+    local removed = monitor and monitor.name
+    place_external_workspaces(removed)
+    if lid_closed() then
+        apply(lid_policy.decide("monitor_removed", true, external_screens(removed)))
     end
+end)
+
+-- The switch event is the lid's state itself; logind may not have caught up with it yet. Alone, logind suspends (Apollo locks first)
+hl.bind("switch:on:Lid Switch", function()
+    apply(lid_policy.decide("lid_closed", true, external_screens()))
 end, { locked = true })
 
 hl.bind("switch:off:Lid Switch", function()
-    os.remove(lid_flag)
-    hl.monitor(laptop)
+    apply(lid_policy.decide("lid_opened", false, external_screens()))
     hl.dispatch(hl.dsp.dpms({ action = "enable" }))
 end, { locked = true })
