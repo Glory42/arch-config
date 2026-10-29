@@ -9,6 +9,8 @@ appearance="$HOME/.config/theme/appearance.json"
 export XCURSOR_THEME="$(jq -r '.cursor_theme // "Adwaita"' "$appearance" 2>/dev/null || echo Adwaita)"
 export XCURSOR_SIZE="$(jq -r '.cursor_size // 24' "$appearance" 2>/dev/null || echo 24)"
 export HYPRCURSOR_SIZE="$XCURSOR_SIZE"
+# Apollo runs without Qt's GTK theme, so Quickshell is told the icon theme directly
+export QS_ICON_THEME="$(jq -r '.icon_theme // "hicolor"' "$appearance" 2>/dev/null || echo hicolor)"
 unset appearance
 
 # Wallpaper change animation: awww picks a random transition that lasts one second
