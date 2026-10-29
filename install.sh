@@ -62,6 +62,7 @@ done
 [ -L ~/.local/bin ] && rm ~/.local/bin
 mkdir -p ~/.local/bin
 for f in "$DOTS"/bin/*; do
+    [ -f "$f" ] || continue
     ln -sfn "$f" ~/.local/bin/"$(basename "$f")"
 done
 
