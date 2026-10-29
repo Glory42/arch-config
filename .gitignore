@@ -3,3 +3,10 @@ theme/themes/*/wallpapers
 
 # Personal to-do and setup notes, kept on this machine only
 ROADMAP.md
+
+# Written by set-theme and apply-theme from the current theme
+theme/palette.json
+gtk-3.0/colors.css
+gtk-4.0/colors.css
+foot/theme.ini
+vesktop/quickCss.css

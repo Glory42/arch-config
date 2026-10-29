@@ -12,4 +12,6 @@ fi
 "$bin/check-palette" "$palette"
 cp "$palette" "$dir/palette.json"
 "$bin/apply-theme"
-hyprctl reload >/dev/null
+if [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+    hyprctl reload >/dev/null
+fi

@@ -11,7 +11,7 @@ git clone git@github.com:Glory42/arch-config.git ~/Projects/hyprland-dots
 ~/Projects/hyprland-dots/install.sh
 ```
 
-It installs the packages, links the configs into `~/.config` and clones Apollo. Log out, pick **Hyprland (uwsm-managed)** in ly, log back in, then run `apply-theme` once.
+It installs the packages, links the configs into `~/.config` and clones Apollo. Log out, pick **Hyprland (uwsm-managed)** in ly, log back in, then run `set-theme Abyss` once.
 
 The wallpapers live in yet another repo, because apparently nothing here is allowed to share a folder. The script clones that too.
 

@@ -124,7 +124,7 @@ say "installing the toolchains, node and friends, this is the other tea moment"
 mise install || echo "mise could not install everything: run mise install again later"
 
 say "painting everything in one colour, as is tradition"
-"$DOTS/bin/apply-theme" || echo "apply-theme did not finish cleanly: run it again after logging in"
+"$DOTS/bin/set-theme" Abyss || echo "set-theme did not finish cleanly: run set-theme Abyss again after logging in"
 "$DOTS/bin/apply-appearance" || echo "apply-appearance did not finish cleanly: run it again after logging in"
 
 say "done: log out and back in, then pretend it always looked this good"
