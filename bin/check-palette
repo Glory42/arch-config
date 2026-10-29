@@ -1,0 +1,8 @@
+#!/bin/bash
+# Exits non-zero, naming what is wrong, unless the palette file has every colour the rice reads as a hex value
+keys='["bg","fg","accent","border_active","border_inactive","regular0","regular1","regular2","regular3","regular4","regular5","regular6","regular7","bright0","bright1","bright2","bright3","bright4","bright5","bright6","bright7","comment","muted"]'
+
+[ -r "$1" ] || { echo "no palette at $1" >&2; exit 1; }
+bad=$(jq -r --argjson keys "$keys" '[$keys[] as $k | select((.[$k] | type) != "string" or (.[$k] | test("^[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$") | not)) | $k] | join(" ")' "$1" 2>/dev/null) \
+    || { echo "$1 is not valid JSON" >&2; exit 1; }
+[ -z "$bad" ] || { echo "$1 is missing or has a bad colour for: $bad" >&2; exit 1; }

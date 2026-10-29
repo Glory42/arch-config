@@ -2,6 +2,7 @@
 set -e
 
 PALETTE=~/.config/theme/palette.json
+"$(dirname "$(readlink -f "$0")")"/check-palette "$PALETTE"
 
 bg=$(jq -r '.bg' "$PALETTE" | cut -c1-6)
 fg=$(jq -r '.fg' "$PALETTE" | cut -c1-6)

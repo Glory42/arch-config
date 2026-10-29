@@ -1,0 +1,15 @@
+#!/bin/bash
+# Makes a theme the current one: checks its palette, copies it in, recolours every app and reloads Hyprland
+set -e
+bin=$(dirname "$(readlink -f "$0")")
+dir=~/.config/theme
+palette="$dir/themes/$1/palette.json"
+
+if [ -z "$1" ] || [ ! -f "$palette" ]; then
+    echo "no theme named '$1'; themes: $(ls "$dir/themes" | tr '\n' ' ')" >&2
+    exit 1
+fi
+"$bin/check-palette" "$palette"
+cp "$palette" "$dir/palette.json"
+"$bin/apply-theme"
+hyprctl reload >/dev/null
