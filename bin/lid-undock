@@ -1,0 +1,22 @@
+#!/bin/bash
+# The last other screen went away with the lid shut: waits for the laptop screen, locks on it, then hands the lid back to logind, which suspends
+log() { logger -t lid-undock "$*"; }
+laptop_up() { hyprctl monitors -j | jq -e --arg name "$1" 'any(.name == $name)' >/dev/null; }
+
+for _ in $(seq 40); do
+    laptop_up "$1" && break
+    sleep 0.1
+done
+if laptop_up "$1"; then
+    log "$1 is back"
+else
+    log "$1 did not come back; screens: $(hyprctl monitors -j | jq -c 'map(.name)')"
+fi
+
+if busctl get-property org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager LidClosed | grep -q true; then
+    loginctl lock-session
+    log "locked"
+    sleep 1.5
+fi
+systemctl --user stop hypr-lid-hold 2>/dev/null
+log "lid handed back to logind"

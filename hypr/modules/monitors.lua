@@ -37,6 +37,10 @@ local function external_screens(removed)
     return count
 end
 
+local function release_lid()
+    hl.exec_cmd("systemctl --user stop hypr-lid-hold 2>/dev/null")
+end
+
 local function apply(decision)
     if decision.laptop_on then
         hl.monitor(laptop)
@@ -46,13 +50,20 @@ local function apply(decision)
     -- A user unit so stopping it ends the whole inhibitor, and PartOf so it never outlives the session
     if decision.hold_lid then
         hl.exec_cmd("systemd-run --user --quiet --unit=hypr-lid-hold -p PartOf=graphical-session.target systemd-inhibit --what=handle-lid-switch --who=Hyprland --why='Laptop screen comes back before sleep' sleep infinity 2>/dev/null")
+    elseif decision.undock then
+        -- Asked again, as the first ask can get lost while the last other screen goes away
+        for _, delay in ipairs({ 500, 1500 }) do
+            hl.timer(function() hl.monitor(laptop) end, { timeout = delay, type = "oneshot" })
+        end
+        hl.exec_cmd("lid-undock " .. laptop.output)
+        -- If lid-undock never finishes, the lid still goes back to logind
+        hl.timer(release_lid, { timeout = 8000, type = "oneshot" })
     else
-        -- The wait lets the laptop screen come back first; then, with the lid still shut, logind suspends by itself (Apollo locks first)
-        hl.exec_cmd("sleep 2 && systemctl --user stop hypr-lid-hold 2>/dev/null")
+        release_lid()
     end
 end
 
-apply(lid_policy.decide(lid_closed(), external_screens()))
+apply(lid_policy.decide("load", lid_closed(), external_screens()))
 
 -- 2. External Screen: BenQ GW2270, starts where the laptop screen ends (2560 / 2 = 1280)
 hl.monitor({
@@ -107,21 +118,21 @@ place_external_workspaces()
 
 hl.on("monitor.added", function()
     place_external_workspaces()
-    apply(lid_policy.decide(lid_closed(), external_screens()))
+    apply(lid_policy.decide("monitor_added", lid_closed(), external_screens()))
 end)
 
 hl.on("monitor.removed", function(monitor)
     local removed = monitor and monitor.name
     place_external_workspaces(removed)
-    apply(lid_policy.decide(lid_closed(), external_screens(removed)))
+    apply(lid_policy.decide("monitor_removed", lid_closed(), external_screens(removed)))
 end)
 
 -- The switch event is the lid's state itself; logind may not have caught up with it yet. Alone, logind suspends (Apollo locks first)
 hl.bind("switch:on:Lid Switch", function()
-    apply(lid_policy.decide(true, external_screens()))
+    apply(lid_policy.decide("lid_closed", true, external_screens()))
 end, { locked = true })
 
 hl.bind("switch:off:Lid Switch", function()
-    apply(lid_policy.decide(false, external_screens()))
+    apply(lid_policy.decide("lid_opened", false, external_screens()))
     hl.dispatch(hl.dsp.dpms({ action = "enable" }))
 end, { locked = true })
