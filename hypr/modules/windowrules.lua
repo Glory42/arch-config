@@ -4,6 +4,8 @@
 
 -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
 
+local launch = require("modules.launch")
+
 hl.window_rule({
     -- Ignore maximize requests from all apps. You'll probably like this.
     name           = "suppress-maximize-events",
@@ -193,7 +195,7 @@ hl.window_rule({
 
 hl.workspace_rule({
     workspace = "special:magic",
-    on_created_empty = "uwsm-app -- foot --app-id=dropdown",
+    on_created_empty = launch("foot --app-id=dropdown"),
 })
 
 hl.window_rule({

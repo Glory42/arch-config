@@ -46,11 +46,6 @@ hl.window_rule({
     scroll_touchpad = 1.5,
 })
 
-hl.window_rule({
-    name  = "tag-terminal",
-    match = { class = terminals.match },
-    tag   = "+terminal",
-})
 -- Per-device overrides go here with hl.device({ name = "...", ... }) once
 -- there's a real device to tune -- see
 -- https://wiki.hypr.land/Configuring/Advanced-and-Cool/Devices/

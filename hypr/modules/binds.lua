@@ -1,11 +1,12 @@
 ---------------------
 ---- MY PROGRAMS ----
 ---------------------
-local fileManager = "uwsm-app -- nautilus"
-local browser = "uwsm-app -- helium-browser"
-local browser2 = "uwsm-app -- chromium"
-local editor = "uwsm-app -- zeditor"
-local music = "uwsm-app -- spotify"
+local launch = require("modules.launch")
+local fileManager = launch("nautilus")
+local browser = launch("helium-browser")
+local browser2 = launch("chromium")
+local editor = launch("zeditor")
+local music = launch("spotify")
 
 ---------------------
 ---- KEYBINDINGS ----
@@ -14,15 +15,15 @@ local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 local see_through = require("modules.transparency")
 
 hl.bind(mainMod .. " + W", hl.dsp.window.close())
-hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("uwsm-app -- xdg-terminal-exec"))
+hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd(launch("xdg-terminal-exec")))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd(browser .. " --incognito"))
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd(editor))
 hl.bind(mainMod .. " + ALT + B", hl.dsp.exec_cmd(browser2))
 hl.bind(mainMod .. " + ALT + SHIFT + B", hl.dsp.exec_cmd(browser2 .. " --incognito"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd("uwsm-app -- foot --app-id=TUI.float btop"))
-hl.bind(mainMod .. " + SHIFT + RETURN", hl.dsp.exec_cmd("uwsm-app -- xdg-terminal-exec herdr"))
+hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd(launch("foot --app-id=TUI.float btop")))
+hl.bind(mainMod .. " + SHIFT + RETURN", hl.dsp.exec_cmd(launch("xdg-terminal-exec herdr")))
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd(music))
 
 -- Apollo -- capsule shortcuts, answered by the running shell

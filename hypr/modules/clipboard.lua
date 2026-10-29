@@ -1,4 +1,5 @@
 local mainMod = "SUPER"
+local terminals = require("modules.terminals")
 
 local function send_shortcut_once(mods, key)
     return function()
@@ -9,32 +10,13 @@ local function send_shortcut_once(mods, key)
     end
 end
 
-local function active_window_is_terminal()
-	local window = hl.get_active_window()
-	if not window then
-		return false
-	end
-
-	local tags = window.tags
-	if type(tags) ~= "table" then
-		return false
-	end
-
-	for _, tag in ipairs(tags) do
-		if tag:gsub("%*$", "") == "terminal" then
-			return true
-		end
-	end
-	return false
-end
-
 -- foot only binds Control+Shift+C/V and its Shift+Insert pastes the PRIMARY selection, so it needs other mods than GUI apps
 local function universal(default_mods, default_key, terminal_mods, terminal_key)
     return function()
         if not hl.get_active_window() then
             return
         end
-        if active_window_is_terminal() then
+        if terminals.is_terminal(hl.get_active_window()) then
             send_shortcut_once(terminal_mods, terminal_key)()
         else
             send_shortcut_once(default_mods, default_key)()

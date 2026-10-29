@@ -1,4 +1,5 @@
 -- See-through windows: apps are solid unless listed here, and SUPER + O flips the focused app (every window of its class)
+local terminals = require("modules.terminals")
 local state_file = (os.getenv("XDG_STATE_HOME") or (os.getenv("HOME") .. "/.local/state")) .. "/hypr-see-through"
 
 -- Window opacity of an app that is see-through; change the numbers here to make windows more or less see-through
@@ -6,7 +7,7 @@ local levels = { active = 0.88, inactive = 0.78 }
 
 -- Apps that start see-through: terminals (herdr and tmux run inside them), Vesktop and Spotify
 local starts_see_through = { "vesktop", "spotify" }
-for _, class in ipairs(require("modules.terminals").classes) do
+for _, class in ipairs(terminals.classes) do
     table.insert(starts_see_through, class)
 end
 
@@ -38,16 +39,11 @@ local function save()
     end
 end
 
--- A window class is matched in full, so the dots and other symbols in it are escaped
-local function pattern(class)
-    return "^" .. class:gsub("[%^%$%(%)%.%[%]%*%+%-%?|{}\\]", "\\%0") .. "$"
-end
-
 local function rule_for(class)
     if not rules[class] then
         rules[class] = hl.window_rule({
             name    = "see-through-" .. class,
-            match   = { class = pattern(class) },
+            match   = { class = terminals.pattern(class) },
             opacity = levels.active .. " override " .. levels.inactive .. " override",
         })
         rules[class]:set_enabled(see_through(class))
