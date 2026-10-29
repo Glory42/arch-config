@@ -9,6 +9,8 @@ function M.decide(event, lid_closed, externals)
         hold_lid = externals > 0,
         -- So the lid stays held until the laptop screen is back and locked, then logind suspends
         undock = event == "monitor_removed" and lid_closed and externals == 0,
+        -- Only with the lid open; with it shut, letting go would suspend before the lock is on a screen
+        release_lid = externals == 0 and not lid_closed,
     }
 end
 

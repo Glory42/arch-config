@@ -26,11 +26,16 @@ local function lid_closed()
     return closed
 end
 
+-- FALLBACK is Hyprland's stand-in while no real screen is on, so it is not another screen
+local function is_external(monitor, removed)
+    return monitor.name ~= laptop.output and monitor.name ~= removed and monitor.name ~= "FALLBACK"
+end
+
 -- The other screens still connected, leaving out one that is going away
 local function external_screens(removed)
     local count = 0
     for _, monitor in ipairs(hl.get_monitors()) do
-        if monitor.name ~= laptop.output and monitor.name ~= removed then
+        if is_external(monitor, removed) then
             count = count + 1
         end
     end
@@ -51,14 +56,10 @@ local function apply(decision)
     if decision.hold_lid then
         hl.exec_cmd("systemd-run --user --quiet --unit=hypr-lid-hold -p PartOf=graphical-session.target systemd-inhibit --what=handle-lid-switch --who=Hyprland --why='Laptop screen comes back before sleep' sleep infinity 2>/dev/null")
     elseif decision.undock then
-        -- Asked again, as the first ask can get lost while the last other screen goes away
-        for _, delay in ipairs({ 500, 1500 }) do
-            hl.timer(function() hl.monitor(laptop) end, { timeout = delay, type = "oneshot" })
-        end
         hl.exec_cmd("lid-undock " .. laptop.output)
         -- If lid-undock never finishes, the lid still goes back to logind
         hl.timer(release_lid, { timeout = 8000, type = "oneshot" })
-    else
+    elseif decision.release_lid then
         release_lid()
     end
 end
@@ -87,7 +88,7 @@ local workspace_rules = {}
 
 local function first_external(removed)
     for _, monitor in ipairs(hl.get_monitors()) do
-        if monitor.name ~= laptop.output and monitor.name ~= removed then
+        if is_external(monitor, removed) then
             return monitor.name
         end
     end
@@ -116,12 +117,23 @@ end
 
 place_external_workspaces()
 
-hl.on("monitor.added", function()
+-- FALLBACK coming or going is Hyprland covering a moment with no screen, not a screen being plugged in or out
+local function is_fallback(monitor)
+    return monitor ~= nil and monitor.name == "FALLBACK"
+end
+
+hl.on("monitor.added", function(monitor)
+    if is_fallback(monitor) then
+        return
+    end
     place_external_workspaces()
     apply(lid_policy.decide("monitor_added", lid_closed(), external_screens()))
 end)
 
 hl.on("monitor.removed", function(monitor)
+    if is_fallback(monitor) then
+        return
+    end
     local removed = monitor and monitor.name
     place_external_workspaces(removed)
     apply(lid_policy.decide("monitor_removed", lid_closed(), external_screens(removed)))

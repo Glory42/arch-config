@@ -1,6 +1,8 @@
 #!/bin/bash
 # The last other screen went away with the lid shut: waits for the laptop screen, locks on it, then hands the lid back to logind, which suspends
 log() { logger -t lid-undock "$*"; }
+exec 9>"$XDG_RUNTIME_DIR/lid-undock.lock"
+flock -n 9 || exit 0
 laptop_up() { hyprctl monitors -j | jq -e --arg name "$1" 'any(.name == $name)' >/dev/null; }
 
 for _ in $(seq 40); do
