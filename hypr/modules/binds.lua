@@ -12,7 +12,6 @@ local music = "uwsm-app -- spotify"
 ---------------------
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 local see_through = require("modules.transparency")
-local home = os.getenv("HOME") or ""
 
 hl.bind(mainMod .. " + W", hl.dsp.window.close())
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("uwsm-app -- xdg-terminal-exec"))
@@ -27,7 +26,7 @@ hl.bind(mainMod .. " + SHIFT + RETURN", hl.dsp.exec_cmd("uwsm-app -- xdg-termina
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd(music))
 
 -- Apollo -- capsule shortcuts, answered by the running shell
-hl.bind(mainMod .. " + CTRL + SHIFT + T", hl.dsp.exec_cmd(home .. "/.local/bin/apollo-toggle")) -- kills Apollo if it runs, starts it if it does not
+hl.bind(mainMod .. " + CTRL + SHIFT + T", hl.dsp.exec_cmd("apollo-toggle")) -- kills Apollo if it runs, starts it if it does not
 hl.bind(mainMod .. " + CTRL + W", hl.dsp.global("apollo:capsule-toggle-wifi"))
 hl.bind(mainMod .. " + CTRL + B", hl.dsp.global("apollo:capsule-toggle-bt"))
 hl.bind(mainMod .. " + CTRL + M", hl.dsp.global("apollo:capsule-toggle-music"))
@@ -160,9 +159,9 @@ hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 5%-"), { loc
 hl.bind("ALT + XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 1%-"), { locked = true, repeating = true })
 
 -- Keyboard backlight (bin/kbd-backlight)
-hl.bind("XF86KbdBrightnessUp", hl.dsp.exec_cmd(home .. "/.local/bin/kbd-backlight up"), { locked = true })
-hl.bind("XF86KbdBrightnessDown", hl.dsp.exec_cmd(home .. "/.local/bin/kbd-backlight down"), { locked = true })
-hl.bind("XF86KbdLightOnOff", hl.dsp.exec_cmd(home .. "/.local/bin/kbd-backlight cycle"), { locked = true })
+hl.bind("XF86KbdBrightnessUp", hl.dsp.exec_cmd("kbd-backlight up"), { locked = true })
+hl.bind("XF86KbdBrightnessDown", hl.dsp.exec_cmd("kbd-backlight down"), { locked = true })
+hl.bind("XF86KbdLightOnOff", hl.dsp.exec_cmd("kbd-backlight cycle"), { locked = true })
 
 -- Requires playerctl
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
