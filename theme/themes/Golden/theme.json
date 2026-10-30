@@ -2,11 +2,10 @@
   "name": "Golden",
   "main_wallpaper": "golden_ring.png",
   "wallpapers": [
+    "dune.png",
     "outer_world.png",
+    "desktop.png",
     "tech_mech.png",
-    "golden-lattice.jpg",
-    "Canyon_sunset.png",
-    "country_road.png",
-    "pisipisi_basketball.png"
+    "Canyon_sunset.png"
   ]
 }
