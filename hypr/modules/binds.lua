@@ -7,6 +7,7 @@ local browser = launch("helium-browser")
 local browser2 = launch("chromium")
 local editor = launch("zeditor")
 local music = launch("spotify")
+local chatapp = launch("beeper")
 
 ---------------------
 ---- KEYBINDINGS ----
@@ -25,6 +26,7 @@ hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + SHIFT + T", hl.dsp.exec_cmd(launch("foot --app-id=TUI.float btop")))
 hl.bind(mainMod .. " + SHIFT + RETURN", hl.dsp.exec_cmd(launch("xdg-terminal-exec herdr")))
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd(music))
+hl.bind(mainMod .. " + G", hl.dsp.exec_cmd(chatapp))
 
 -- Apollo -- capsule shortcuts, answered by the running shell
 hl.bind(mainMod .. " + CTRL + SHIFT + T", hl.dsp.exec_cmd("apollo-toggle")) -- kills Apollo if it runs, starts it if it does not
