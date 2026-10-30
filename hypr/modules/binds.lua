@@ -167,6 +167,9 @@ hl.bind("XF86KbdBrightnessUp", hl.dsp.exec_cmd("kbd-backlight up"), { locked = t
 hl.bind("XF86KbdBrightnessDown", hl.dsp.exec_cmd("kbd-backlight down"), { locked = true })
 hl.bind("XF86KbdLightOnOff", hl.dsp.exec_cmd("kbd-backlight cycle"), { locked = true })
 
+-- Touchpad, answered by Apollo (F6 on the Zenbook)
+hl.bind("XF86TouchpadToggle", hl.dsp.global("apollo:touchpad-toggle"))
+
 -- Requires playerctl
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
