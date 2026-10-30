@@ -39,6 +39,7 @@ hl.bind(mainMod .. " + CTRL + C", hl.dsp.global("apollo:capsule-toggle-calendar"
 hl.bind(mainMod .. " + CTRL + E", hl.dsp.global("apollo:capsule-toggle-weather"))
 hl.bind(mainMod .. " + CTRL + S", hl.dsp.global("apollo:capsule-toggle-sound"))
 hl.bind(mainMod .. " + CTRL + G", hl.dsp.global("apollo:capsule-toggle-connection"))
+hl.bind(mainMod .. " + CTRL + F", hl.dsp.global("apollo:capsule-toggle-focus"))
 hl.bind(mainMod .. " + CTRL + X", hl.dsp.global("apollo:capsule-close"))
 hl.bind(mainMod .. " + CTRL + right", hl.dsp.global("apollo:capsule-next"))
 hl.bind(mainMod .. " + CTRL + left", hl.dsp.global("apollo:capsule-prev"))
