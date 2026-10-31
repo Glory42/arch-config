@@ -52,6 +52,12 @@ sudo usermod -aG docker "$USER"
 systemctl --user enable --now ssh-agent.socket \
     || echo "could not enable the ssh agent: run systemctl --user enable --now ssh-agent.socket after logging in"
 
+say "snapshots: a photo of the system before and after every update, for the day one goes wrong"
+{ [ -f /etc/snapper/configs/root ] || sudo snapper -c root create-config /; } \
+    && sudo snapper -c root set-config TIMELINE_CREATE=no NUMBER_LIMIT=20 NUMBER_LIMIT_IMPORTANT=10 \
+    && sudo systemctl enable snapper-cleanup.timer \
+    || echo "snapper did not set up: run sudo snapper -c root create-config / by hand"
+
 say "firewall: nothing in, everything out, and a door for LocalSend"
 sudo ufw default deny incoming && sudo ufw default allow outgoing && sudo ufw allow 53317 comment LocalSend && sudo ufw --force enable \
     || echo "ufw rules did not apply (a kernel update during the install can cause this): reboot, then run the four ufw lines from install.sh by hand"

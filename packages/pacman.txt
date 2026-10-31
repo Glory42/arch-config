@@ -105,6 +105,7 @@ unzip
 ufw
 fwupd
 snapper
+snap-pac
 smartmontools
 pacman-contrib
 zram-generator
