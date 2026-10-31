@@ -25,6 +25,9 @@ say() { echo; echo "==> $*"; }
 say "installing packages: this is a good time to make tea"
 sudo pacman -S --needed --noconfirm $(pkgs "$DOTS/packages/pacman.txt")
 
+mkdir -p ~/.config/pacman
+link "$DOTS/pacman/makepkg.conf" ~/.config/pacman/makepkg.conf
+
 if ! command -v yay >/dev/null 2>&1; then
     say "no yay, so building the thing that builds things"
     sudo pacman -S --needed --noconfirm git base-devel
