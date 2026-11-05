@@ -209,10 +209,11 @@ hl.window_rule({
 ---- DROPDOWN TERMINAL --
 -----------------------
 
-hl.workspace_rule({
-    workspace = "special:magic",
-    on_created_empty = launch("foot --app-id=dropdown"),
-})
+hl.on("workspace.created", function(workspace)
+    if workspace.name == "special:magic" and workspace.is_empty then
+        hl.exec_cmd(launch("foot --app-id=dropdown"))
+    end
+end)
 
 hl.window_rule({
     -- SUPER + S opens the scratchpad, and its first window is this terminal
