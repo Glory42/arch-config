@@ -3,6 +3,9 @@
 [[ ":$PATH:" == *":$HOME/.local/bin:"* ]] || export PATH="$HOME/.local/bin:$PATH"
 export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR:-/run/user/$UID}/ssh-agent.socket"
 
+# No bell on ambiguous Tab completion
+bind 'set bell-style none'
+
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
 
