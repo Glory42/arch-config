@@ -2,10 +2,10 @@
   "name": "Crimson",
   "main_wallpaper": "red_solar.png",
   "wallpapers": [
-    "floating_astronaut.png",
+    "RedSun_debris.png",
     "ferrari.png",
-    "daredevil.png",
-    "red_blackhole.png",
-    "ship.png"
+    "floating_astronaut.png",
+    "Eye_of_Providence.png",
+    "daredevil.png"
   ]
 }
